@@ -15,13 +15,15 @@ npm install --save react-pixi-layout
 ```jsx
 import React, { Component } from 'react'
 
-import MyComponent from 'react-pixi-layout'
+import { Stage, Text } from 'react-pixi-layout'
 
 class Example extends Component {
   render () {
     return (
-      <MyComponent />
-    )
+      <Stage width={ 640 } height={ 480 }>
+      	<Text text="Hello world" />
+      </Stage>
+    );
   }
 }
 ```

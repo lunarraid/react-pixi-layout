@@ -1,6 +1,6 @@
 {
   "name": "react-pixi-layout",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "React Fiber renderer for pixi.js with flexbox layout",
   "author": "lunarraid",
   "license": "MIT",
@@ -16,8 +16,17 @@
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "animated": "^0.2.2",
+    "fbjs": "^0.8.16",
+    "lodash": "^4.17.5",
+    "prop-types": "^15.6.1",
+    "react-reconciler": "^0.7.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "yoga-layout": "git+https://github.com/lunarraid/yoga.git#node-module"
+  },
   "peerDependencies": {
+    "pixi.js": "^4.7.1",
     "prop-types": "^15.5.4",
     "react": "^15.0.0 || ^16.0.0",
     "react-dom": "^15.0.0 || ^16.0.0"
