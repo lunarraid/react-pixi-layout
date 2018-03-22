@@ -4,6 +4,10 @@
 
 [![NPM](https://img.shields.io/npm/v/react-pixi-layout.svg)](https://www.npmjs.com/package/react-pixi-layout) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
+## Example
+
+(https://codesandbox.io/s/r0lkjp8k1p)
+
 ## Install
 
 ```bash
