@@ -1,4 +1,3 @@
-import * as PIXI from 'pixi.js';
 import TinyColor from '../util/TinyColor';
 import Graphics from './Graphics';
 
@@ -24,4 +23,4 @@ export default class Rectangle extends Graphics {
     this.displayObject.endFill();
   }
 
-};
+}

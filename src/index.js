@@ -1,19 +1,29 @@
 import Animated from 'animated';
 import Easing from 'animated/lib/Easing';
-import ReactFiberReconciler from 'react-reconciler';
 import invariant from 'fbjs/lib/invariant';
+import _ from 'lodash';
+
+import React from 'react';
+import ReactFiberReconciler from 'react-reconciler';
+
+import BackgroundContainerElement from './elements/BackgroundContainer';
+import BackgroundImageElement from './elements/BackgroundImage';
+import BitmapTextElement from './elements/BitmapText';
 import ContainerElement from './elements/Container';
-import SpriteElement from './elements/Sprite';
-import NineSliceSpriteElement from './elements/NineSliceSprite';
-import TilingSpriteElement from './elements/TilingSprite';
 import GraphicsElement from './elements/Graphics';
+import NineSliceSpriteElement from './elements/NineSliceSprite';
 import RectangleElement from './elements/Rectangle';
+import SpriteElement from './elements/Sprite';
 import TextElement from './elements/Text';
+import TilingSpriteElement from './elements/TilingSprite';
+
 import Stage from './Stage';
 
 const UPDATE_SIGNAL = {};
 const performance = window.performance || window.msPerformance || window.webkitPerformance;
 const _registeredElements = {};
+
+const PixiContext = React.createContext();
 
 function appendChild (parentInstance, child) {
   parentInstance.addChild(child);
@@ -38,18 +48,22 @@ function insertBefore (parentInstance, child, beforeChild) {
 
 function commitUpdate (instance, updatePayload, type, oldProps, newProps, internalInstanceHandle) {
   instance.applyProps(oldProps, newProps);
+  instance.displayObject.___props = newProps;
 }
 
 const ReactPixiLayout = ReactFiberReconciler({
+
+  supportsMutation: true,
+  isPrimaryRenderer: false,
 
   appendInitialChild: appendChild,
 
   createInstance: function (type, props, internalInstanceHandle, hostContext) {
     const ctor = _registeredElements[type];
     invariant(ctor, 'ReactPixiLayout does not support the type: `%s`.', type);
-    const instance = new ctor();
-    instance.root = hostContext.root;
+    const instance = new ctor(props, hostContext.root);
     instance.applyProps({}, props);
+    instance.displayObject.___props = props;
     return instance;
   },
 
@@ -70,7 +84,7 @@ const ReactPixiLayout = ReactFiberReconciler({
   },
 
   getPublicInstance: function (inst) {
-    return inst;
+    return inst.publicInstance;
   },
 
   now: function () {
@@ -107,28 +121,21 @@ const ReactPixiLayout = ReactFiberReconciler({
 
   useSyncScheduling: true,
 
-  mutation: {
 
-    appendChild: appendChild,
-    appendChildToContainer: appendChild,
+  appendChild: appendChild,
+  appendChildToContainer: appendChild,
 
-    insertBefore: insertBefore,
-    insertInContainerBefore: insertBefore,
+  insertBefore: insertBefore,
+  insertInContainerBefore: insertBefore,
 
-    removeChild: removeChild,
-    removeChildFromContainer: removeChild,
+  removeChild: removeChild,
+  removeChildFromContainer: removeChild,
 
-    commitTextUpdate: function (textInstance, oldText, newText) {
-      // Noop
-    },
+  commitTextUpdate: function (textInstance, oldText, newText) {
+    // Noop
+  },
 
-    commitMount: function (instance, type, newProps) {
-      // Noop
-    },
-
-    commitUpdate: commitUpdate
-  
-  }
+  commitUpdate: commitUpdate
 
 });
 
@@ -139,7 +146,10 @@ export function registerElement (name, element) {
 
 export const Container = 'Container';
 export const Text = 'Text';
+export const BitmapText = 'BitmapText';
 export const Sprite = 'Sprite';
+export const BackgroundContainer = 'BackgroundContainer';
+export const BackgroundImage = 'BackgroundImage';
 export const TilingSprite = 'TilingSprite';
 export const NineSliceSprite = 'NineSliceSprite';
 export const Graphics = 'Graphics';
@@ -147,22 +157,43 @@ export const Rectangle = 'Rectangle';
 
 registerElement(Container, ContainerElement);
 registerElement(Text, TextElement);
+registerElement(BitmapText, BitmapTextElement);
 registerElement(Sprite, SpriteElement);
+registerElement(BackgroundContainer, BackgroundContainerElement);
+registerElement(BackgroundImage, BackgroundImageElement);
 registerElement(TilingSprite, TilingSpriteElement);
 registerElement(NineSliceSprite, NineSliceSpriteElement);
 registerElement(Graphics, GraphicsElement);
 registerElement(Rectangle, RectangleElement);
 
 const animatedExport = {
+  BackgroundContainer: Animated.createAnimatedComponent(BackgroundContainer),
   Container: Animated.createAnimatedComponent(Container),
   Text: Animated.createAnimatedComponent(Text),
+  BitmapText: Animated.createAnimatedComponent(BitmapText),
   Sprite: Animated.createAnimatedComponent(Sprite),
-  TilingSprite: Animated.createAnimatedComponent(TilingSprite),  
-  NineSliceSprite: Animated.createAnimatedComponent(NineSliceSprite),  
+  BackgroundImage: Animated.createAnimatedComponent(Sprite),
+  TilingSprite: Animated.createAnimatedComponent(TilingSprite),
+  NineSliceSprite: Animated.createAnimatedComponent(NineSliceSprite),
   Graphics: Animated.createAnimatedComponent(Graphics),
   Rectangle: Animated.createAnimatedComponent(Rectangle),
   Easing,
   ...Animated
 };
 
-export { ReactPixiLayout, Stage, animatedExport as Animated };
+export function mergeStyles (style, result) {
+  if (!Array.isArray(style)) {
+    return result ? _.merge(result, style) : style;
+  }
+
+  result = result || {};
+
+  for (let i = 0, len = style.length; i < len; i++) {
+    const element = style[i];
+    mergeStyles(element, result);
+  }
+
+  return result;
+}
+
+export { PixiContext, ReactPixiLayout, Stage, animatedExport as Animated, Easing };

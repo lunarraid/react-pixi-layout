@@ -1,10 +1,44 @@
 import * as PIXI from 'pixi.js';
 import BaseElement from './BaseElement';
 
+const textStyleKeys = {
+  align: true,
+  breakWords: true,
+  dropShadow: true,
+  dropShadowAlpha: true,
+  dropShadowAngle: true,
+  dropShadowBlur: true,
+  dropShadowColor: true,
+  dropShadowDistance: true,
+  fill: true,
+  fillGradientType: true,
+  fillGradientStops: true,
+  fontFamily: true,
+  fontSize: true,
+  fontStyle: true,
+  fontVariant: true,
+  fontWeight: true,
+  letterSpacing: true,
+  lineHeight: true,
+  lineJoin: true,
+  miterLimit: true,
+  padding: true,
+  stroke: true,
+  strokeThickness: true,
+  textBaseline: true,
+  trim: true,
+  whiteSpace: true,
+  wordWrap: true,
+  wordWrapWidth: true,
+  leading: true
+};
+
+const scratchStyle = new PIXI.TextStyle();
+
 export default class Text extends BaseElement {
 
-  constructor () {
-    super();
+  constructor (props, root) {
+    super(props, root);
     this.layoutNode.setMeasureFunc((width, widthMode, height, heightMode) => this.measure(width, widthMode, height, heightMode));
     this.sizeData = { width: 0, height: 0 };
     this.textStyle = new PIXI.TextStyle();
@@ -18,10 +52,30 @@ export default class Text extends BaseElement {
     super.applyProps(oldProps, newProps);
     this.displayObject.text = newProps.text || '';
 
+    let needsUpdate = false;
+
+    scratchStyle.reset();
+
+    for (let key in this.style) {
+      if (textStyleKeys[key]) {
+        scratchStyle[key] = this.style[key];
+        if (scratchStyle[key] !== this.textStyle[key]) {
+          needsUpdate = true;
+          break;
+        }
+      }
+    }
+
+    if (!needsUpdate) {
+      return;
+    }
+
     this.textStyle.reset();
 
-    for (var key in this.style) {
-      this.textStyle[key] = this.style[key];
+    for (let key in this.style) {
+      if (textStyleKeys[key]) {
+        this.textStyle[key] = this.style[key];
+      }
     }
 
     this.displayObject.style = this.textStyle;
@@ -29,28 +83,13 @@ export default class Text extends BaseElement {
 
   measure (width, widthMode, height, heightMode) {
     const { text, style } = this.displayObject;
-
     const previousWordWrapWidth = style.wordWrapWidth;
     style.wordWrapWidth = width;
     const metrics = PIXI.TextMetrics.measureText(text, style);
     style.wordWrapWidth = previousWordWrapWidth;
 
-    let calculatedWidth = metrics.width;
-    let calculatedHeight = metrics.height;
-    const scale = calculatedWidth / calculatedHeight;
-
-    /* eslint-disable */
-    if (width !== width && height === height) {
-      calculatedWidth = height * scale;
-      calculatedHeight = height;
-    } else if (width === width && height !== height) {
-      calculatedWidth = width;
-      calculatedHeight = width / scale;
-    }
-    /* eslint-enable */
-
-    this.sizeData.width = calculatedWidth;
-    this.sizeData.height = calculatedHeight;
+    this.sizeData.width = metrics.width;
+    this.sizeData.height = metrics.height;
 
     return this.sizeData;
   }
@@ -62,4 +101,4 @@ export default class Text extends BaseElement {
     this.displayObject.dirty = true;
   }
 
-};
+}

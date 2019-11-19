@@ -7,4 +7,4 @@ export default class Graphics extends Container {
     return new PIXI.Graphics();
   }
 
-};
+}

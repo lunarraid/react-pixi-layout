@@ -3,48 +3,87 @@ import BaseElement from './BaseElement';
 
 export default class Container extends BaseElement {
 
-  constructor () {
-    super();
-    this.children = [];
+  children = [];
+  clippingSprite = null;
+
+  _isClippingEnabled = false;
+
+  get isClippingEnabled () {
+    return this._isClippingEnabled;
+  }
+
+  set isClippingEnabled (isClippingEnabled) {
+    isClippingEnabled = !!isClippingEnabled;
+
+    if (this._isClippingEnabled === isClippingEnabled) {
+      return;
+    }
+
+    if (isClippingEnabled) {
+      this.clippingSprite = new PIXI.Sprite(PIXI.Texture.WHITE);
+
+      this.clippingSprite.width = this.bounds.width;
+      this.clippingSprite.height = this.bounds.height;
+      this.getChildContainer().mask = this.clippingSprite;
+
+      this.getChildContainer().addChild(this.clippingSprite);
+    } else {
+      this.getChildContainer().mask = null;
+
+      this.getChildContainer().removeChild(this.clippingSprite);
+
+      this.clippingSprite = null;
+    }
+
+    this._isClippingEnabled = isClippingEnabled;
   }
 
   addChild (child) {
     this.layoutNode.insertChild(child.layoutNode, this.layoutNode.getChildCount());
-    this.displayObject.addChild(child.displayObject);
+    this.getChildContainer().addChild(child.displayObject);
     this.children.push(child);
+
+    if (this.clippingSprite) {
+      this.getChildContainer().swapChildren(this.clippingSprite, child.displayObject);
+    }
   }
 
   addChildAt (child, index) {
     this.layoutNode.insertChild(child.layoutNode, index);
-    this.displayObject.addChildAt(child.displayObject, index);
+    this.getChildContainer().addChildAt(child.displayObject, index);
+
     if (index === this.children.length) {
       this.children.push(child);
+
+      this.getChildContainer().swapChildren(this.clippingSprite, child.displayObject);
     } else {
       this.children.splice(index, 0, child);
     }
   }
 
+  getChildContainer () {
+    return this.displayObject;
+  }
+
   removeChild (child) {
-    this.displayObject.removeChild(child.displayObject);
+    this.getChildContainer().removeChild(child.displayObject);
     this.layoutNode.removeChild(child.layoutNode);
 
     const childIndex = this.children.indexOf(child);
+
     this.children.splice(childIndex, 1);
 
     child.destroy();
+
+    this.layoutDirty = true;
   }
 
-  removeChildAt (child, index) {
-    this.displayObject.removeChildAt(child.displayObject, index);
-    this.layoutNode.removeChild(child.layoutNode);
-    this.children.splice(index, 1);
-    child.destroy();
-  }
+  setChildIndex (child, index) {
+    this.getChildContainer().setChildIndex(child.displayObject, index);
 
-  setChildIndex(child, index) {
-    this.displayObject.setChildIndex(child.displayObject, index);
     const currentIndex = this.getChildIndex(child);
-    this.childen.splice(currentIndex, 1);
+
+    this.children.splice(currentIndex, 1);
     this.children.splice(index, 0, child);
   }
 
@@ -60,18 +99,44 @@ export default class Container extends BaseElement {
     super.applyLayout();
 
     const childCount = this.children.length;
+
     for (let i = 0; i < childCount; i++) {
       this.children[i].applyLayout();
     }
   }
 
+  applyProps (oldProps, newProps) {
+    super.applyProps(oldProps, newProps);
+
+    this.isClippingEnabled = newProps.isClippingEnabled;
+  }
+
+  destroy () {
+    for (let i = this.children.length - 1; i >= 0; i--) {
+      this.removeChild(this.children[i]);
+    }
+
+    if (this.clippingSprite) {
+      this.displayObject.removeChild(this.clippingSprite);
+
+      this.clippingSprite = null;
+    }
+
+    super.destroy();
+  }
+
   onLayout (x, y, width, height) {
     this.displayObject.pivot.x = this.anchorX * width;
     this.displayObject.pivot.y = this.anchorY * height;
+
+    if (this.clippingSprite) {
+      this.clippingSprite.width = width;
+      this.clippingSprite.height = height;
+    }
   }
 
   createDisplayObject () {
     return new PIXI.Container();
   }
 
-};
+}

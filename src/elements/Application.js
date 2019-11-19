@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import Container from './Container';
 import _ from 'lodash';
 
-const optionKeys = [    
+const optionKeys = [
   'antialias',
   'autoStart',
   'autoResize',
@@ -25,18 +25,18 @@ const optionKeys = [
 
 export default class Application extends Container {
 
-  constructor (props) {
-    super();
-    const options = _.pick(props, optionKeys);
-    this._application = new PIXI.Application(options);
-    this._application.ticker.add(this.onTick, this);
-    this.displayObject = this._application.stage;
-    this.applyProps(props, props);
+  constructor (props, root) {
+    super(props, root);
+    this.applyProps({}, props);
+    window.papp = this;
   }
 
-  createDisplayObject () {
-    // Don't use default display object creation
-    return null;
+  createDisplayObject (props) {
+    const options = _.pick(props, optionKeys);
+    this.view = props.view;
+    this.application = new PIXI.Application(options);
+    this.application.ticker.add(this.onTick, this);
+    return this.application.stage;
   }
 
   applyProps (oldProps, newProps) {
@@ -44,7 +44,9 @@ export default class Application extends Container {
     const { style, ...nextProps } = newProps;
 
     if (oldProps.width !== width || oldProps.height !== height) {
-      this._application.renderer.resize(width, height);
+      this.application.renderer.resize(width, height);
+      this.view.style.width = '100%';
+      this.view.style.height = '100%';
       this.layoutDirty = true;
     }
 
@@ -57,11 +59,16 @@ export default class Application extends Container {
     super.applyProps(oldProps, nextProps);
   }
 
-  onTick (e) {
+  onTick () {
     if (this.layoutDirty) {
       this.layoutNode.calculateLayout();
       this.applyLayout();
     }
   }
 
-};
+  destroy () {
+    this.application.ticker.remove(this.onTick, this);
+    super.destroy();
+  }
+
+}

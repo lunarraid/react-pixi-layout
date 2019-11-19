@@ -4,13 +4,15 @@ import Container from './Container';
 export default class TilingSprite extends Container {
 
   createDisplayObject () {
-    return new PIXI.extras.TilingSprite(PIXI.Texture.EMPTY);
+    return new PIXI.TilingSprite(PIXI.Texture.EMPTY);
   }
 
   applyProps (oldProps, newProps) {
     super.applyProps(oldProps, newProps);
-    const texture = newProps.texture ? PIXI.Texture.fromImage(newProps.texture) : null;
+    const texture = newProps.texture ? PIXI.Texture.from(newProps.texture) : null;
     this.displayObject.texture = texture;
+    this.displayObject.tilePosition.set(newProps.offsetX || 0, newProps.offsetY || 0);
+    this.displayObject.tileScale.set(newProps.tileScale);
   }
 
   onLayout (x, y, width, height) {
@@ -22,4 +24,4 @@ export default class TilingSprite extends Container {
   }
 
 
-};
+}

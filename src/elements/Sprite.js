@@ -6,8 +6,8 @@ export default class Sprite extends BaseElement {
 
   sizeData = { width: 0, height: 0 };
 
-  constructor () {
-    super();
+  constructor (props, root) {
+    super(props, root);
     this.layoutNode.setMeasureFunc((width, widthMode, height, heightMode) => this.measure(width, widthMode, height, heightMode));
   }
 
@@ -18,15 +18,20 @@ export default class Sprite extends BaseElement {
   applyProps (oldProps, newProps) {
     super.applyProps(oldProps, newProps);
 
-    if (oldProps.texture !== newProps.texture) {
-      const texture = newProps.texture ? PIXI.Texture.fromImage(newProps.texture) : null;
+    let { texture = PIXI.Texture.WHITE } = newProps;
+
+    if (oldProps.texture !== texture) {
+      if (typeof texture === 'string' || texture instanceof String) {
+        texture = PIXI.Texture.from(newProps.texture);
+      }
+
       this.updateTexture(texture);
     }
   }
 
   updateTexture (texture) {
     if (texture && !texture.baseTexture.hasLoaded) {
-      texture.once('update', () => this.updateTexture(this.displayObject.texture));
+      texture.once('update', () => this.displayObject && this.updateTexture(this.displayObject.texture));
     }
 
     this.displayObject.texture = texture;
@@ -41,27 +46,37 @@ export default class Sprite extends BaseElement {
   }
 
   measure (width, widthMode, height, heightMode) {
+
     const texture = this.displayObject.texture;
 
-    if (!texture || !texture.baseTexture.hasLoaded) {
+    if (!texture || !texture.baseTexture.valid) {
       this.sizeData.width = this.sizeData.height = 0;
       return this.sizeData;
     }
 
     let calculatedWidth = texture.orig.width;
     let calculatedHeight = texture.orig.height;
-
     const scale = calculatedWidth / calculatedHeight;
 
-    /* eslint-disable */
-    if (width !== width && height === height || widthMode == Yoga.MEASURE_MODE_AT_MOST) {
-      calculatedWidth = height * scale;
-      calculatedHeight = height;
-    } else if (width === width && height !== height || heightMode == Yoga.MEASURE_MODE_AT_MOST) {
-      calculatedWidth = width;
-      calculatedHeight = width / scale;
+    if (widthMode === Yoga.MEASURE_MODE_AT_MOST) {
+      calculatedWidth = width > calculatedWidth ? calculatedWidth : width;
+      calculatedHeight = calculatedWidth / scale;
     }
-    /* eslint-enable */
+
+    if (heightMode === Yoga.MEASURE_MODE_AT_MOST) {
+      calculatedHeight = height > calculatedHeight ? calculatedHeight : height;
+      calculatedWidth = calculatedHeight * scale;
+    }
+
+    if (widthMode === Yoga.MEASURE_MODE_EXACTLY) {
+      calculatedWidth = width;
+      calculatedHeight = heightMode !== Yoga.MEASURE_MODE_EXACTLY ? calculatedWidth / scale : height;
+    }
+
+    if (heightMode === Yoga.MEASURE_MODE_EXACTLY) {
+      calculatedHeight = height;
+      calculatedWidth = widthMode !== Yoga.MEASURE_MODE_EXACTLY ? calculatedHeight * scale : width;
+    }
 
     this.sizeData.width = calculatedWidth;
     this.sizeData.height = calculatedHeight;
@@ -73,13 +88,13 @@ export default class Sprite extends BaseElement {
     if (this.displayObject.texture) {
       this.displayObject.width = width * this.scaleX;
       this.displayObject.height = height * this.scaleY;
-      if (this.displayObject.scale.x < 0 !== this.scaleX < 0) {
+      if ((this.displayObject.scale.x < 0) !== (this.scaleX < 0)) {
         this.displayObject.scale.x *= -1;
       }
-      if (this.displayObject.scale.y < 0 !== this.scaleY < 0) {
+      if ((this.displayObject.scale.y < 0) !== (this.scaleY < 0)) {
         this.displayObject.scale.y *= -1;
       }
     }
   }
 
-};
+}

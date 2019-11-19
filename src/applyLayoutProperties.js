@@ -43,6 +43,7 @@ export const defaultValues = {
   flexBasis: 'auto',
   flexGrow: 0,
   flexShrink: 1,
+  aspectRatio: NaN,
   width: 'auto',
   height: 'auto',
   minWidth: NaN,
@@ -95,7 +96,8 @@ export const justifyContentEnumMapping = {
   center: Yoga.JUSTIFY_CENTER,
   'flex-end': Yoga.JUSTIFY_FLEX_END,
   'space-between': Yoga.JUSTIFY_SPACE_BETWEEN,
-  'space-around': Yoga.JUSTIFY_SPACE_AROUND
+  'space-around': Yoga.JUSTIFY_SPACE_AROUND,
+  'space-evenly': Yoga.JUSTIFY_SPACE_EVENLY
 };
 
 export const overflowEnumMapping = {
@@ -242,6 +244,10 @@ const setterMap = {
 
   flexShrink: function (node, value) {
     node.setFlexShrink(value);
+  },
+
+  aspectRatio: function (node, value) {
+    node.setAspectRatio(value);
   },
 
   width: function (node, value) {
@@ -407,13 +413,13 @@ function isShallowEqual (props1, props2) {
 }
 
 export default function applyLayoutProperties (node, oldProps, newProps) {
-
   if (isShallowEqual(oldProps, newProps)) {
     return false;
   }
 
   for (let propName in oldProps) {
     const propSetter = setterMap[propName];
+
     if (propSetter && !newProps.hasOwnProperty(propName)) {
       propSetter(node, defaultValues[propName]);
     }
@@ -421,10 +427,21 @@ export default function applyLayoutProperties (node, oldProps, newProps) {
 
   for (let propName in newProps) {
     const propSetter = setterMap[propName];
+
     if (propSetter) {
       propSetter(node, newProps[propName]);
     }
   }
 
   return true;
-};
+}
+
+export function applyDefaultLayoutProperties (node) {
+  for (let propName in defaultValues) {
+    const propSetter = setterMap[propName];
+
+    if (propSetter) {
+      propSetter(node, defaultValues[propName]);
+    }
+  }
+}
