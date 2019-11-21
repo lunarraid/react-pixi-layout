@@ -1,30 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { PixiContext, ReactPixiLayout } from './index';
 import Application from './elements/Application';
 
 export default class Stage extends React.Component {
-
-  static propTypes = {
-    antialias: PropTypes.bool,
-    autoStart: PropTypes.bool,
-    backgroundColor: PropTypes.number,
-    clearBeforeRender: PropTypes.bool,
-    forceCanvas: PropTypes.bool,
-    forceFXAA: PropTypes.bool,
-    legacy: PropTypes.bool,
-    powerPreference: PropTypes.string,
-    preserveDrawingBuffer: PropTypes.bool,
-    resolution: PropTypes.number,
-    roundPixels: PropTypes.bool,
-    sharedLoader: PropTypes.bool,
-    sharedTicker: PropTypes.bool,
-    transparent: PropTypes.bool,
-    children: PropTypes.node,
-    height: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
-    style: PropTypes.object
-  };
 
   state = {
     context: {

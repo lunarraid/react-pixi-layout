@@ -1,10 +1,9 @@
-import invariant from 'fbjs/lib/invariant';
 import * as PIXI from 'pixi.js';
 import Yoga from 'yoga-layout';
 
 // import applyLayoutProperties, { applyDefaultLayoutProperties } from 'react-pixi-layout/applyLayoutProperties';
-import applyLayoutProperties from 'react-pixi-layout/applyLayoutProperties';
-import { mergeStyles } from 'react-pixi-layout';
+import applyLayoutProperties from '../applyLayoutProperties';
+import { mergeStyles } from '../index';
 
 const interactiveProps = {
   pointerdown: 'onDown',
@@ -227,7 +226,7 @@ export default class BaseElement {
   }
 
   createDisplayObject () {
-    invariant(false, 'Cannot instantiate base class');
+    throw new Error('Cannot instantiate base class');
   }
 
   get layoutDirty () {

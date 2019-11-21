@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 
-import TinyColor from 'react-pixi-layout/util/TinyColor';
+import TinyColor from '../util/TinyColor';
 
 import Container from './Container';
 

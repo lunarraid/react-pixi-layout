@@ -1,6 +1,5 @@
-import Animated from 'animated';
-import Easing from 'animated/lib/Easing';
-import invariant from 'fbjs/lib/invariant';
+import Animated from '@lunarraid/animated';
+import Easing from '@lunarraid/animated/lib/Easing';
 import _ from 'lodash';
 
 import React from 'react';
@@ -34,7 +33,9 @@ function removeChild (parentInstance, child) {
 }
 
 function insertBefore (parentInstance, child, beforeChild) {
-  invariant(child !== beforeChild, 'ReactPixiLayout cannot insert node before itself');
+  if (child === beforeChild) {
+    throw new Error('ReactPixiLayout cannot insert node before itself');
+  }
 
   const childExists = parentInstance.hasChild(child);
   const index = parentInstance.getChildIndex(beforeChild);
@@ -60,7 +61,11 @@ const ReactPixiLayout = ReactFiberReconciler({
 
   createInstance: function (type, props, internalInstanceHandle, hostContext) {
     const ctor = _registeredElements[type];
-    invariant(ctor, 'ReactPixiLayout does not support the type: `%s`.', type);
+
+    if (!ctor) {
+      throw new Error(`ReactPixiLayout does not support the type: ${ type }`);
+    }
+
     const instance = new ctor(props, hostContext.root);
     instance.applyProps({}, props);
     instance.displayObject.___props = props;
@@ -68,7 +73,7 @@ const ReactPixiLayout = ReactFiberReconciler({
   },
 
   createTextInstance: function (text, rootContainerInstance, internalInstanceHandle) {
-    invariant(false, 'ReactPixiLayout does not support text instances. Use Text component instead.');
+    throw new Error('ReactPixiLayout does not support text instances. Use Text component instead.');
   },
 
   finalizeInitialChildren: function (pixiElement, type, props, rootContainerInstance) {
