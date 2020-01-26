@@ -128,6 +128,8 @@ export default class BaseElement {
       }
     }
 
+    this.displayObject.mask = newProps.mask;
+
     const anchorX = this.parsePercentage(this.style.anchorX, 0.5);
     const anchorY = this.parsePercentage(this.style.anchorY, 0.5);
     const scaleX = this.parsePercentage(this.style.scaleX, 1);
@@ -270,7 +272,6 @@ export default class BaseElement {
       cursor: 'auto',
       filterArea: null,
       filters: null,
-      mask: null,
       renderable: true,
       rotation: 0,
       visible: true,

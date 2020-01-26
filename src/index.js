@@ -12,6 +12,7 @@ import ContainerElement from './elements/Container';
 import GraphicsElement from './elements/Graphics';
 import NineSliceSpriteElement from './elements/NineSliceSprite';
 import RectangleElement from './elements/Rectangle';
+import MaskContainerElement from './elements/MaskContainer';
 import SpriteElement from './elements/Sprite';
 import TextElement from './elements/Text';
 import TilingSpriteElement from './elements/TilingSprite';
@@ -159,6 +160,7 @@ export const TilingSprite = 'TilingSprite';
 export const NineSliceSprite = 'NineSliceSprite';
 export const Graphics = 'Graphics';
 export const Rectangle = 'Rectangle';
+export const MaskContainer = 'MaskContainer';
 
 registerElement(Container, ContainerElement);
 registerElement(Text, TextElement);
@@ -170,6 +172,7 @@ registerElement(TilingSprite, TilingSpriteElement);
 registerElement(NineSliceSprite, NineSliceSpriteElement);
 registerElement(Graphics, GraphicsElement);
 registerElement(Rectangle, RectangleElement);
+registerElement(MaskContainer, MaskContainerElement);
 
 const animatedExport = {
   BackgroundContainer: Animated.createAnimatedComponent(BackgroundContainer),
@@ -182,6 +185,7 @@ const animatedExport = {
   NineSliceSprite: Animated.createAnimatedComponent(NineSliceSprite),
   Graphics: Animated.createAnimatedComponent(Graphics),
   Rectangle: Animated.createAnimatedComponent(Rectangle),
+  MaskContainer: Animated.createAnimatedComponent(MaskContainer),
   Easing,
   ...Animated
 };
