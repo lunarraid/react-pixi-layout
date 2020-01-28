@@ -205,4 +205,18 @@ export function mergeStyles (style, result) {
   return result;
 }
 
-export { PixiContext, ReactPixiLayout, Stage, animatedExport as Animated, Easing };
+const Elements = {
+  BackgroundContainerElement,
+  BackgroundImageElement,
+  BitmapTextElement,
+  ContainerElement,
+  GraphicsElement,
+  NineSliceSpriteElement,
+  RectangleElement,
+  MaskContainerElement,
+  SpriteElement,
+  TextElement,
+  TilingSpriteElement
+};
+
+export { Elements, PixiContext, ReactPixiLayout, Stage, animatedExport as Animated, Easing };
