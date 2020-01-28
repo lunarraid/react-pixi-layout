@@ -206,6 +206,7 @@ export function mergeStyles (style, result) {
 }
 
 const Elements = {
+  BaseElement,
   BackgroundContainerElement,
   BackgroundImageElement,
   BitmapTextElement,
