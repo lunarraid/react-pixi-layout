@@ -5,6 +5,7 @@ import _ from 'lodash';
 import React from 'react';
 import ReactFiberReconciler from 'react-reconciler';
 
+import BaseElement from './elements/BaseElement';
 import BackgroundContainerElement from './elements/BackgroundContainer';
 import BackgroundImageElement from './elements/BackgroundImage';
 import BitmapTextElement from './elements/BitmapText';
