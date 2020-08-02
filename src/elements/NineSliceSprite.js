@@ -16,7 +16,7 @@ export default class NineSliceSprite extends Container {
     if (newProps.texture) {
       texture = (typeof newProps.texture === 'string' || newProps.texture instanceof String)
         ? PIXI.Texture.from(newProps.texture)
-        : newProps.texture
+        : newProps.texture;
     }
 
     const height = texture ? texture.height : 0;

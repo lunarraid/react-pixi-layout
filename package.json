@@ -1,13 +1,11 @@
 {
   "name": "react-pixi-layout",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "React Fiber renderer for pixi.js with flexbox layout",
   "author": "lunarraid",
   "license": "MIT",
   "repository": "lunarraid/react-pixi-layout",
   "main": "dist/index.js",
-  "module": "dist/index.es.js",
-  "jsnext:main": "dist/index.es.js",
   "scripts": {
     "test": "CI=1 react-scripts test --env=jsdom",
     "build": "rollup -c",
@@ -17,8 +15,7 @@
     "deploy": "gh-pages -d example/build"
   },
   "dependencies": {
-    "lodash": "^4.17.15",
-    "yoga-layout": "^1.9.3"
+    "typeflex": "0.0.1"
   },
   "peerDependencies": {
     "pixi.js": "^5.2.0",
@@ -26,8 +23,9 @@
     "react-dom": "^16.0.0"
   },
   "devDependencies": {
-    "react-reconciler": "0.21.0",
     "@lunarraid/animated": "^0.2.3",
+    "pixi-text-input": "^1.0.5",
+    "react-reconciler": "0.21.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^10.0.3",
     "babel-plugin-external-helpers": "^6.22.0",
@@ -35,12 +33,12 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "gh-pages": "^2.1.1",
-    "rollup": "^1.27.2",
+    "rollup": "^1.32.1",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-peer-deps-external": "^2.2.0"
+    "rollup-plugin-peer-deps-external": "^2.2.3"
   },
   "files": [
     "dist"

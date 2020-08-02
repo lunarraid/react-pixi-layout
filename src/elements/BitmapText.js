@@ -25,7 +25,7 @@ export default class BitmapText extends BaseElement {
 
   constructor (props, root) {
     super(props, root);
-    this.layoutNode.setMeasureFunc((width, widthMode, height, heightMode) => this.measure(width, widthMode, height, heightMode));
+    this.layoutNode.setMeasureFunc((node, width, widthMode, height, heightMode) => this.measure(node, width, widthMode, height, heightMode));
     this.sizeData = { width: 0, height: 0 };
     this.color = null;
   }
@@ -70,7 +70,7 @@ export default class BitmapText extends BaseElement {
     }
   }
 
-  measure (width, widthMode, height, heightMode) {
+  measure (node, width, widthMode, height, heightMode) {
     const dimensions = this.displayObject.measureText(scratchPoint, width);
 
     this.sizeData.width = dimensions.x;

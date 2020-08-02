@@ -55,7 +55,7 @@ class App extends Component {
             onClick={ this.onClick }
           >
             <Text text="Click Me" style={{ fill: 'white', fontSize: 30 }} />
-            <Animated.Sprite texture="https://i.imgur.com/6xwgjO2.png" style={{ height: '50%', alpha: this.animatedValue }} />
+            <Animated.Sprite texture="http://placekitten.com/200/300" style={{ height: '50%', alpha: this.animatedValue }} />
           </Animated.Rectangle>
 
           <Rectangle style={ styles.flexRight } />

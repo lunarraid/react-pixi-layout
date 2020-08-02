@@ -1,9 +1,9 @@
 import * as PIXI from 'pixi.js';
-import Yoga from 'yoga-layout';
+import * as Yoga from 'typeflex';
 
 // import applyLayoutProperties, { applyDefaultLayoutProperties } from 'react-pixi-layout/applyLayoutProperties';
 import applyLayoutProperties from '../applyLayoutProperties';
-import { mergeStyles } from '../index';
+import mergeStyles from '../mergeStyles';
 
 const interactiveProps = {
   pointerdown: 'onDown',
@@ -19,7 +19,10 @@ const interactiveProps = {
 const interactivePropList = Object.keys(interactiveProps);
 const interactivePropCount = interactivePropList.length;
 
-const childNotSupported = () => invariant(false, 'Element does not support children.');
+const childNotSupported = () => {
+  throw new Error('Element does not support children.');
+};
+
 const noStyle = {};
 
 const yogaConfig = Yoga.Config.create();
@@ -108,6 +111,10 @@ export default class BaseElement {
 
   applyProps (oldProps, newProps) {
     this.applyInteractiveListeners(oldProps, newProps);
+
+    const { interactiveChildren = true } = newProps;
+    this.displayObject.interactiveChildren = interactiveChildren;
+
     this.onLayoutCallback = newProps.onLayout || null;
 
     const newStyle = newProps.style ? mergeStyles(newProps.style) : noStyle;

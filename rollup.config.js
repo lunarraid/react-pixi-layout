@@ -7,16 +7,12 @@ import resolve from 'rollup-plugin-node-resolve';
 import pkg from './package.json';
 
 export default {
-  external: [ 'lodash', 'yoga-layout' ],
+  external: [ 'typeflex' ],
   input: 'src/index.js',
   output: [
     {
       file: pkg.main,
       format: 'cjs'
-    },
-    {
-      file: pkg.module,
-      format: 'es'
     }
   ],
   plugins: [

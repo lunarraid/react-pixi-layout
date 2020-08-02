@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import Container from './Container';
-import _ from 'lodash';
+import mergeStyles from '../mergeStyles';
 
 const optionKeys = [
   'antialias',
@@ -32,7 +32,11 @@ export default class Application extends Container {
   }
 
   createDisplayObject (props) {
-    const options = _.pick(props, optionKeys);
+    const options = optionKeys.reduce((result, key) => {
+      if (props.hasOwnProperty(key)) { result[key] = props[key]; }
+      return result;
+    }, {});
+
     this.view = props.view;
     this.application = new PIXI.Application(options);
     this.application.ticker.add(this.onTick, this);
@@ -40,8 +44,7 @@ export default class Application extends Container {
   }
 
   applyProps (oldProps, newProps) {
-    const { width, height } = newProps;
-    const { style, ...nextProps } = newProps;
+    const { width, height, style } = newProps;
 
     if (oldProps.width !== width || oldProps.height !== height) {
       this.application.renderer.resize(width, height);
@@ -50,13 +53,9 @@ export default class Application extends Container {
       this.layoutDirty = true;
     }
 
-    const newStyle = Array.isArray(style) ? _.merge(...style) : { ...style };
+    const newStyle = { ...mergeStyles(style), width, height };
 
-    newStyle.width = width;
-    newStyle.height = height;
-    nextProps.style = newStyle;
-
-    super.applyProps(oldProps, nextProps);
+    super.applyProps(oldProps, { ...newProps, style: newStyle });
   }
 
   onTick () {

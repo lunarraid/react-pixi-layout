@@ -39,7 +39,7 @@ export default class Text extends BaseElement {
 
   constructor (props, root) {
     super(props, root);
-    this.layoutNode.setMeasureFunc((width, widthMode, height, heightMode) => this.measure(width, widthMode, height, heightMode));
+    this.layoutNode.setMeasureFunc((node, width, widthMode, height, heightMode) => this.measure(width, widthMode, height, heightMode));
     this.sizeData = { width: 0, height: 0 };
     this.textStyle = new PIXI.TextStyle();
   }
@@ -81,7 +81,7 @@ export default class Text extends BaseElement {
     this.displayObject.style = this.textStyle;
   }
 
-  measure (width, widthMode, height, heightMode) {
+  measure (node, width, widthMode, height, heightMode) {
     const { text, style } = this.displayObject;
     const previousWordWrapWidth = style.wordWrapWidth;
     style.wordWrapWidth = width;

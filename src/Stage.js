@@ -16,7 +16,12 @@ export default class Stage extends React.Component {
     this._applicationElement = new Application(props);
     this._applicationContainer = ReactPixiLayout.createContainer(this._applicationElement);
 
-    this.setState({ context: { application: this._applicationElement.application } });
+    this.setState({
+      context: {
+        application: this._applicationElement.application,
+        canvas: this._canvas
+      }
+    });
 
     ReactPixiLayout.injectIntoDevTools({
       findFiberByHostInstance: ReactPixiLayout.findFiberByHostInstance,
@@ -35,8 +40,6 @@ export default class Stage extends React.Component {
   }
 
   componentWillUnmount () {
-    debugger;
-
     ReactPixiLayout.updateContainer(null, this._applicationContainer, this);
 
     this._applicationElement.destroy();

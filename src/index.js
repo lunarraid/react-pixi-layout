@@ -1,6 +1,5 @@
 import Animated from '@lunarraid/animated';
 import Easing from '@lunarraid/animated/lib/Easing';
-import _ from 'lodash';
 
 import React from 'react';
 import ReactFiberReconciler from 'react-reconciler';
@@ -14,8 +13,10 @@ import GraphicsElement from './elements/Graphics';
 import NineSliceSpriteElement from './elements/NineSliceSprite';
 import RectangleElement from './elements/Rectangle';
 import MaskContainerElement from './elements/MaskContainer';
+import ScrollContainerElement from './elements/ScrollContainer';
 import SpriteElement from './elements/Sprite';
 import TextElement from './elements/Text';
+import TextInputElement from './elements/TextInput';
 import TilingSpriteElement from './elements/TilingSprite';
 
 import Stage from './Stage';
@@ -153,7 +154,9 @@ export function registerElement (name, element) {
 
 export const Container = 'Container';
 export const Text = 'Text';
+export const TextInput = 'TextInput';
 export const BitmapText = 'BitmapText';
+export const ScrollContainer = 'ScrollContainer';
 export const Sprite = 'Sprite';
 export const BackgroundContainer = 'BackgroundContainer';
 export const BackgroundImage = 'BackgroundImage';
@@ -165,7 +168,9 @@ export const MaskContainer = 'MaskContainer';
 
 registerElement(Container, ContainerElement);
 registerElement(Text, TextElement);
+registerElement(TextInput, TextInputElement);
 registerElement(BitmapText, BitmapTextElement);
+registerElement(ScrollContainer, ScrollContainerElement);
 registerElement(Sprite, SpriteElement);
 registerElement(BackgroundContainer, BackgroundContainerElement);
 registerElement(BackgroundImage, BackgroundImageElement);
@@ -179,7 +184,9 @@ const animatedExport = {
   BackgroundContainer: Animated.createAnimatedComponent(BackgroundContainer),
   Container: Animated.createAnimatedComponent(Container),
   Text: Animated.createAnimatedComponent(Text),
+  TextInput: Animated.createAnimatedComponent(TextInput),
   BitmapText: Animated.createAnimatedComponent(BitmapText),
+  ScrollContainer: Animated.createAnimatedComponent(ScrollContainer),
   Sprite: Animated.createAnimatedComponent(Sprite),
   BackgroundImage: Animated.createAnimatedComponent(Sprite),
   TilingSprite: Animated.createAnimatedComponent(TilingSprite),
@@ -191,21 +198,6 @@ const animatedExport = {
   ...Animated
 };
 
-export function mergeStyles (style, result) {
-  if (!Array.isArray(style)) {
-    return result ? _.merge(result, style) : style;
-  }
-
-  result = result || {};
-
-  for (let i = 0, len = style.length; i < len; i++) {
-    const element = style[i];
-    mergeStyles(element, result);
-  }
-
-  return result;
-}
-
 const Elements = {
   BaseElement,
   BackgroundContainerElement,
@@ -216,8 +208,10 @@ const Elements = {
   NineSliceSpriteElement,
   RectangleElement,
   MaskContainerElement,
+  ScrollContainerElement,
   SpriteElement,
   TextElement,
+  TextInputElement,
   TilingSpriteElement
 };
 

@@ -145,7 +145,7 @@ export default class BackgroundContainer extends Container {
     }
 
     if (needsUpdate && this.originalTexture && this.originalTexture !== previousTexture) {
-      this.updateTexture(this.originalTexture)
+      this.updateTexture(this.originalTexture);
     }
   }
 

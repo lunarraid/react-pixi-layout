@@ -1,6 +1,39 @@
 import * as PIXI from 'pixi.js';
 import BaseElement from './BaseElement';
 
+class CustomContainer extends PIXI.Container {
+
+  _width = 0;
+  _height = 0;
+
+  isCustomContainer = true;
+
+  _calculateBounds () {
+    const b = this._bounds;
+    b.minX = 0;
+    b.maxX = this._width;
+    b.minY = 0;
+    b.maxY = this._height;
+  }
+
+  get height () {
+    return this._height;
+  }
+
+  set height (value) {
+    this._height = value;
+  }
+
+  get width () {
+    return this._width;
+  }
+
+  set width (value) {
+    this._width = value;
+  }
+
+}
+
 export default class Container extends BaseElement {
 
   children = [];
@@ -129,6 +162,11 @@ export default class Container extends BaseElement {
     this.displayObject.pivot.x = this.anchorX * width;
     this.displayObject.pivot.y = this.anchorY * height;
 
+    if (this.displayObject.isCustomContainer) {
+      this.displayObject.height = height;
+      this.displayObject.width = width;
+    }
+
     if (this.clippingSprite) {
       this.clippingSprite.width = width;
       this.clippingSprite.height = height;
@@ -136,7 +174,7 @@ export default class Container extends BaseElement {
   }
 
   createDisplayObject () {
-    return new PIXI.Container();
+    return new CustomContainer();
   }
 
 }

@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import Yoga from 'yoga-layout';
+import * as Yoga from 'typeflex';
 import BaseElement from './BaseElement';
 
 export default class Sprite extends BaseElement {
@@ -8,7 +8,7 @@ export default class Sprite extends BaseElement {
 
   constructor (props, root) {
     super(props, root);
-    this.layoutNode.setMeasureFunc((width, widthMode, height, heightMode) => this.measure(width, widthMode, height, heightMode));
+    this.layoutNode.setMeasureFunc((node, width, widthMode, height, heightMode) => this.measure(node, width, widthMode, height, heightMode));
   }
 
   createDisplayObject () {
@@ -45,7 +45,7 @@ export default class Sprite extends BaseElement {
     this.layoutDirty = true;
   }
 
-  measure (width, widthMode, height, heightMode) {
+  measure (node, width, widthMode, height, heightMode) {
 
     const texture = this.displayObject.texture;
 

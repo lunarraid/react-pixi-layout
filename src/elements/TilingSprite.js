@@ -12,7 +12,7 @@ export default class TilingSprite extends Container {
     const texture = newProps.texture ? PIXI.Texture.from(newProps.texture) : null;
     this.displayObject.texture = texture;
     this.displayObject.tilePosition.set(newProps.offsetX || 0, newProps.offsetY || 0);
-    this.displayObject.tileScale.set(newProps.tileScale);
+    this.displayObject.tileScale.set(newProps.tileScale || 1);
   }
 
   onLayout (x, y, width, height) {
