@@ -20,6 +20,7 @@ import TextInputElement from './elements/TextInput';
 import TilingSpriteElement from './elements/TilingSprite';
 
 import Stage from './Stage';
+import mergeStyles from './mergeStyles';
 
 const UPDATE_SIGNAL = {};
 const performance = window.performance || window.msPerformance || window.webkitPerformance;
@@ -215,4 +216,4 @@ const Elements = {
   TilingSpriteElement
 };
 
-export { Elements, PixiContext, ReactPixiLayout, Stage, animatedExport as Animated, Easing };
+export { Elements, PixiContext, ReactPixiLayout, Stage, animatedExport as Animated, Easing, mergeStyles };
