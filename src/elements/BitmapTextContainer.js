@@ -80,7 +80,7 @@ export default class BitmapTextContainer extends PIXI.Container {
   measureText (result = new PIXI.Point(), width = this._width) {
 
     if (!this._fontData) {
-      this._fontData = PIXI.BitmapText.fonts[this._font];
+      this._fontData = PIXI.BitmapFont.available[this._font];
     }
 
     if (!this._fontData || !this._text) {
@@ -216,7 +216,7 @@ export default class BitmapTextContainer extends PIXI.Container {
   }
 
   validate () {
-    this._fontData = PIXI.BitmapText.fonts[this._font];
+    this._fontData = PIXI.BitmapFont.available[this._font];
 
     if (!this._fontData) {
       return;
