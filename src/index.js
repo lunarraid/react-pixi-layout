@@ -5,7 +5,7 @@ import React from 'react';
 import ReactFiberReconciler from 'react-reconciler';
 
 import BaseElement from './elements/BaseElement';
-import BackgroundContainerElement from './elements/BackgroundContainer';
+import BackgroundContainerElement, { RESIZE_MODES as RPL_RESIZE_MODES } from './elements/BackgroundContainer';
 import BackgroundImageElement from './elements/BackgroundImage';
 import BitmapTextElement from './elements/BitmapText';
 import ContainerElement from './elements/Container';
@@ -166,6 +166,8 @@ export const NineSliceSprite = 'NineSliceSprite';
 export const Graphics = 'Graphics';
 export const Rectangle = 'Rectangle';
 export const MaskContainer = 'MaskContainer';
+
+export const RESIZE_MODES = RPL_RESIZE_MODES;
 
 registerElement(Container, ContainerElement);
 registerElement(Text, TextElement);
