@@ -5,7 +5,7 @@ import React from 'react';
 import ReactFiberReconciler from 'react-reconciler';
 
 import BaseElement from './elements/BaseElement';
-import BackgroundContainerElement from './elements/BackgroundContainer';
+import BackgroundContainerElement, { BackgroundContainerResizeModes } from './elements/BackgroundContainer';
 import BackgroundImageElement from './elements/BackgroundImage';
 import BitmapTextElement from './elements/BitmapText';
 import ContainerElement from './elements/Container';
@@ -63,6 +63,10 @@ const ReactPixiLayout = ReactFiberReconciler({
 
   appendInitialChild: appendChild,
 
+  clearContainer: function (container) {
+    container.removeAllChildrenRecursive();
+  },
+
   createInstance: function (type, props, internalInstanceHandle, hostContext) {
     const ctor = _registeredElements[type];
 
@@ -101,7 +105,7 @@ const ReactPixiLayout = ReactFiberReconciler({
   },
 
   prepareForCommit: function () {
-    // Noop
+    return null;
   },
 
   prepareUpdate: function (pixiElement, type, oldProps, newProps, rootContainerInstance, hostContext) {
@@ -216,4 +220,13 @@ const Elements = {
   TilingSpriteElement
 };
 
-export { Elements, PixiContext, ReactPixiLayout, Stage, animatedExport as Animated, Easing, mergeStyles };
+export {
+  Elements,
+  PixiContext,
+  ReactPixiLayout,
+  Stage,
+  animatedExport as Animated,
+  Easing,
+  mergeStyles,
+  BackgroundContainerResizeModes
+};

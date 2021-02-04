@@ -98,6 +98,14 @@ export default class Container extends BaseElement {
     return this.displayObject;
   }
 
+  removeAllChildrenRecursive () {
+    for (let i = this.children.length - 1; i >= 0; i--) {
+      const child = this.children[i];
+      child.removeAllChildren();
+      this.removeChild(child);
+    }
+  }
+
   removeChild (child) {
     this.getChildContainer().removeChild(child.displayObject);
     this.layoutNode.removeChild(child.layoutNode);

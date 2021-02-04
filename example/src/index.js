@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Stage, Container, Rectangle, Text, Animated } from 'react-pixi-layout';
+import { Stage, BitmapText, Container, Rectangle, Text, Animated } from 'react-pixi-layout';
+import { Loader } from 'pixi.js';
 
 class App extends Component {
 
@@ -46,6 +47,7 @@ class App extends Component {
 
         <Rectangle style={ styles.header }>
           <Text text="An Absolutely Positioned Header" style={{ fill: 'blue', fontSize: 32 }} />
+          <BitmapText text="Bitmap Text" style={ styles.bitmapText } />
         </Rectangle>
 
         <Container style={ styles.container }>
@@ -59,7 +61,9 @@ class App extends Component {
           </Animated.Rectangle>
 
           <Rectangle style={ styles.flexRight } />
+
         </Container>
+
       </Stage>
     );
   }
@@ -81,21 +85,32 @@ const styles = {
   },
 
   header: {
-    width: '100%',
-    height: 50,
     color: 'yellow',
     position: 'absolute',
     top: 0,
+    left: 0,
+    right: 0,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    padding: 32
   },
 
   flexRight: {
     color: 'blue',
     height: '50%',
     flex: 1
+  },
+
+  bitmapText: {
+    color: 0x666666,
+    font: 'arial_black',
+    size: 32
   }
 
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// Font needs to be loaded before we can render BitmapText
+Loader.shared
+  .add(`${ process.env.PUBLIC_URL }/arial_black.fnt`)
+  .load(() => ReactDOM.render(<App />, document.getElementById('root')));
+

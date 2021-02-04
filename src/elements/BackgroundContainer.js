@@ -6,11 +6,11 @@ import Container from './Container';
 
 const emptyObject = {};
 
-export const RESIZE_MODES = {
+export const BackgroundContainerResizeModes = {
   CONTAIN: 'contain',
   COVER: 'cover',
   NINE_SLICE: 'nineSlice',
-  STRETCH: 'stretch',
+  STRETCH: 'stretch'
 };
 
 export default class BackgroundContainer extends Container {
@@ -63,8 +63,8 @@ export default class BackgroundContainer extends Container {
 
   set resizeMode (value) {
     if (this._resizeMode !== value) {
-      const is9Slice = value === RESIZE_MODES.NINE_SLICE;
-      const was9Slice = this._resizeMode === RESIZE_MODES.NINE_SLICE;
+      const is9Slice = value === BackgroundContainerResizeModes.NINE_SLICE;
+      const was9Slice = this._resizeMode === BackgroundContainerResizeModes.NINE_SLICE;
 
       this._resizeMode = value;
 
@@ -77,7 +77,7 @@ export default class BackgroundContainer extends Container {
       }
 
       if (!this.background) {
-        this.background = value === RESIZE_MODES.NINE_SLICE
+        this.background = value === BackgroundContainerResizeModes.NINE_SLICE
           ? new PIXI.NineSlicePlane(PIXI.Texture.WHITE)
           : new PIXI.Sprite(PIXI.Texture.WHITE);
       }
@@ -121,10 +121,10 @@ export default class BackgroundContainer extends Container {
     }
 
     this.textureScale = textureScale || 1;
-    this.resizeMode = resizeMode || RESIZE_MODES.STRETCH;
+    this.resizeMode = resizeMode || BackgroundContainerResizeModes.STRETCH;
 
     if (this.background) {
-      if (this.resizeMode === RESIZE_MODES.NINE_SLICE) {
+      if (this.resizeMode === BackgroundContainerResizeModes.NINE_SLICE) {
         const { topHeight, rightWidth, bottomHeight, leftWidth } = newProps;
         const { frame } = this.originalTexture;
 
@@ -185,7 +185,7 @@ export default class BackgroundContainer extends Container {
       return;
     }
 
-    if (this.resizeMode === RESIZE_MODES.STRETCH) {
+    if (this.resizeMode === BackgroundContainerResizeModes.STRETCH) {
       // Just shove the texture in at the full width/height
 
       this.background.texture = requestedTexture;
@@ -210,7 +210,7 @@ export default class BackgroundContainer extends Container {
         : new PIXI.Point(0, 0)
     );
 
-    if (this.resizeMode === RESIZE_MODES.NINE_SLICE) {
+    if (this.resizeMode === BackgroundContainerResizeModes.NINE_SLICE) {
       this.background.texture = modifiedTexture;
       this.background.scale = new PIXI.Point(this.textureScale, this.textureScale);
       this.background.width = layoutWidth / this.textureScale;
@@ -221,7 +221,7 @@ export default class BackgroundContainer extends Container {
 
     const { frame: modifiedFrame, trim: modifiedTrim } = modifiedTexture;
 
-    const isContain = this.resizeMode === RESIZE_MODES.CONTAIN;
+    const isContain = this.resizeMode === BackgroundContainerResizeModes.CONTAIN;
     const layoutRatio = layoutWidth / layoutHeight;
     const trimmedRatio = modifiedFrame.width / modifiedFrame.height;
     const useWidth = isContain ? layoutRatio < trimmedRatio : layoutRatio > trimmedRatio;

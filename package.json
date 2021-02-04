@@ -1,6 +1,6 @@
 {
   "name": "react-pixi-layout",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "React Fiber renderer for pixi.js with flexbox layout",
   "author": "lunarraid",
   "license": "MIT",
@@ -18,14 +18,12 @@
     "typeflex": "0.0.1"
   },
   "peerDependencies": {
-    "pixi.js": "^5.2.0",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "pixi.js": "^5.3.0",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0"
   },
   "devDependencies": {
     "@lunarraid/animated": "^0.2.3",
-    "pixi-text-input": "^1.0.5",
-    "react-reconciler": "0.21.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^10.0.3",
     "babel-plugin-external-helpers": "^6.22.0",
@@ -33,6 +31,8 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "gh-pages": "^2.1.1",
+    "pixi-text-input": "^1.0.5",
+    "react-reconciler": "^0.26.1",
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^10.1.0",

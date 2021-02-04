@@ -57,6 +57,10 @@ export default class BaseElement {
     // applyDefaultLayoutProperties(this.layoutNode);
   }
 
+  removeAllChildrenRecursive () {
+    // Noop for container clear
+  }
+
   hasChild (child) {
     childNotSupported();
   }
