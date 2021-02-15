@@ -23,12 +23,8 @@ const scratchPoint = new PIXI.Point();
 
 export default class BitmapText extends BaseElement {
 
-  constructor (props, root) {
-    super(props, root);
-    this.layoutNode.setMeasureFunc((node, width, widthMode, height, heightMode) => this.measure(node, width, widthMode, height, heightMode));
-    this.sizeData = { width: 0, height: 0 };
-    this.color = null;
-  }
+  sizeData = { width: 0, height: 0 };
+  color = null;
 
   createDisplayObject (props) {
     return new BitmapTextContainer();

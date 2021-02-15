@@ -54,7 +54,8 @@ export default class BaseElement {
     this.skewY = 0;
     this.displayObject = this.createDisplayObject(props);
 
-    // applyDefaultLayoutProperties(this.layoutNode);
+    this._isMeasureFunctionSet = false;
+    this.updateMeasureFunction(false);
   }
 
   removeAllChildrenRecursive () {
@@ -188,8 +189,8 @@ export default class BaseElement {
       cached.width = newLayout.width;
       cached.height = newLayout.height;
 
-      this.bounds.width = cached.width;
-      this.bounds.height = cached.height;
+      this.bounds.width = cached.width / this.displayObject.scale.x;
+      this.bounds.height = cached.height / this.displayObject.scale.y;
 
       this.applyTransform();
       this.onLayout(cached.x, cached.y, cached.width, cached.height);
@@ -229,6 +230,19 @@ export default class BaseElement {
     }
 
     return value;
+  }
+
+  updateMeasureFunction (hasChildren) {
+    if (this._isMeasureFunctionSet && hasChildren) {
+      this._isMeasureFunctionSet = false;
+      this.layoutNode.setMeasureFunc(null);
+    } else if (!this._isMeasureFunctionSet && !hasChildren && this.measure) {
+      this._isMeasureFunctionSet = true;
+      this.layoutNode.setMeasureFunc(
+        (node, width, widthMode, height, heightMode) =>
+          this.measure(node, width, widthMode, height, heightMode)
+      );
+    }
   }
 
   destroy () {
@@ -286,7 +300,9 @@ export default class BaseElement {
       renderable: true,
       rotation: 0,
       visible: true,
-      tint: 0xffffff
+      tint: 0xffffff,
+      sortableChildren: false,
+      zIndex: 0
     };
   }
 

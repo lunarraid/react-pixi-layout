@@ -72,6 +72,7 @@ export default class Container extends BaseElement {
   }
 
   addChild (child) {
+    this.updateMeasureFunction(true);
     this.layoutNode.insertChild(child.layoutNode, this.layoutNode.getChildCount());
     this.getChildContainer().addChild(child.displayObject);
     this.children.push(child);
@@ -113,6 +114,7 @@ export default class Container extends BaseElement {
     const childIndex = this.children.indexOf(child);
 
     this.children.splice(childIndex, 1);
+    this.updateMeasureFunction(this.children.length > 0);
 
     child.destroy();
 

@@ -101,7 +101,7 @@ export default class BackgroundContainer extends Container {
 
     super.applyProps(oldProps, newProps);
 
-    const { resizeMode, texture, textureScale } = newProps;
+    const { resizeMode = this.style.resizeMode, texture = this.style.texture, textureScale } = newProps;
     const previousTexture = this.originalTexture;
 
     let needsUpdate = true;

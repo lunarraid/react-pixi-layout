@@ -37,12 +37,8 @@ const scratchStyle = new PIXI.TextStyle();
 
 export default class Text extends BaseElement {
 
-  constructor (props, root) {
-    super(props, root);
-    this.layoutNode.setMeasureFunc((node, width, widthMode, height, heightMode) => this.measure(width, widthMode, height, heightMode));
-    this.sizeData = { width: 0, height: 0 };
-    this.textStyle = new PIXI.TextStyle();
-  }
+  sizeData = { width: 0, height: 0 };
+  textStyle = new PIXI.TextStyle();
 
   createDisplayObject () {
     return new PIXI.Text();

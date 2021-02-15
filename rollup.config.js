@@ -9,12 +9,11 @@ import pkg from './package.json';
 export default {
   external: [ 'typeflex' ],
   input: 'src/index.js',
-  output: [
-    {
-      file: pkg.main,
-      format: 'cjs'
-    }
-  ],
+  output: [{
+    file: pkg.main,
+    format: 'cjs',
+    sourcemap: true
+  }],
   plugins: [
     external(),
     nodebuiltins(),
