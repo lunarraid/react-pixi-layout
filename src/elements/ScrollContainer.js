@@ -1,13 +1,15 @@
 import { Container, Rectangle, Point, Sprite, Texture, Ticker } from 'pixi.js';
 import ContainerElement from './Container';
 
-const { log, pow } = Math;
+const { abs, log, pow } = Math;
 
 const VELOCITY_MIN = 0.1;
 const DAMPING = 0.01;
 const LOG_DAMPING = log(DAMPING);
 
 const ticker = Ticker.shared;
+
+const SCRATCH_POINT = new Point();
 
 class ScrollContentContainer extends Container {
 
@@ -23,6 +25,16 @@ class ScrollContentContainer extends Container {
       const { x: oX, y: oY, width: oWidth, height: oHeight } = this._localBoundsCache;
 
       this.getLocalBounds(this._localBoundsCache, true);
+
+      if (this._localBoundsCache.x < 0) {
+        this._localBoundsCache.width += this._localBoundsCache.x;
+        this._localBoundsCache.x = 0;
+      }
+
+      if (this._localBoundsCache.y < 0) {
+        this._localBoundsCache.height += this._localBoundsCache.y;
+        this._localBoundsCache.y = 0;
+      }
 
       const { x, y, width, height } = this._localBoundsCache;
 
@@ -56,8 +68,14 @@ class ScrollContentContainer extends Container {
 
 class ScrollContainer extends Container {
 
+  static DRAG_START = 'dragStart';
+  static DRAG = 'drag';
+  static DRAG_STOP = 'dragStop';
+
   onWheel = ({ deltaX, deltaY }) => {
-    this.scrollBy(deltaX, deltaY);
+    if (this.isScrollWheelEnabled) {
+      this.scrollBy(deltaX, deltaY);
+    }
   };
 
   constructor () {
@@ -65,7 +83,9 @@ class ScrollContainer extends Container {
 
     this.interactionManager = null;
 
+    this._isDragging = false;
     this._inputRoot = null;
+    this._initialPointerPosition = new Point();
     this._lastPointerPosition = new Point();
     this._lastScrollTime = 0;
     this._lastScrollDuration = 0;
@@ -84,6 +104,8 @@ class ScrollContainer extends Container {
 
     this.width = 100;
     this.height = 100;
+    this.isScrollWheelEnabled = true;
+    this.dragThreshold = 10;
   }
 
   destroy () {
@@ -104,7 +126,7 @@ class ScrollContainer extends Container {
     this.scrollTop += y;
 
     if (this.scrollTop !== previousTop || this.scrollLeft !== previousLeft) {
-      this.emit('scrolled');    
+      this.emit('scrolled');
     }
   }
 
@@ -130,7 +152,8 @@ class ScrollContainer extends Container {
   onPointerDown (event) {
     this._lastScrollTime = Date.now();
     this.removeListener('pointerdown', this.onPointerDown, this);
-    this._lastPointerPosition.copyFrom(this.toLocal(event.data.global));
+    this.toLocal(event.data.global, null, this._initialPointerPosition);
+    this._lastPointerPosition.copyFrom(this._initialPointerPosition);
     this.interactionManager.on('pointermove', this.onPointerMove, this);
     this.interactionManager.on('pointerup', this.onPointerUp, this);
     this.interactionManager.on('pointerout', this.onPointerUp, this);
@@ -139,7 +162,7 @@ class ScrollContainer extends Container {
 
   onPointerMove (event) {
     const now = Date.now();
-    const newPosition = this.toLocal(event.data.global);
+    const newPosition = this.toLocal(event.data.global, null, SCRATCH_POINT);
     const dx = this._lastPointerPosition.x - newPosition.x;
     const dy = this._lastPointerPosition.y - newPosition.y;
     this._lastPointerPosition.copyFrom(newPosition);
@@ -147,6 +170,19 @@ class ScrollContainer extends Container {
     this._lastScrollDuration = now - this._lastScrollTime;
     this._lastScrollTime = now;
     this.scrollBy(dx, dy);
+
+    if (this._isDragging) {
+      this.emit(ScrollContainer.DRAG, event);
+      return;
+    }
+
+    const didDrag = abs(this._initialPointerPosition.x - newPosition.x) > this.dragThreshold
+      || abs(this._initialPointerPosition.y - newPosition.y) > this.dragThreshold;
+
+    if (didDrag) {
+      this._isDragging = true;
+      this.emit(ScrollContainer.DRAG_START, event);
+    }
   }
 
   onPointerOut (event) {
@@ -154,7 +190,7 @@ class ScrollContainer extends Container {
   }
 
   onPointerOver (event) {
-    document.addEventListener('wheel', this.onWheel);
+    document.addEventListener('wheel', this.onWheel, { passive: true });
   }
 
   onPointerUp (event) {
@@ -166,6 +202,11 @@ class ScrollContainer extends Container {
 
     const multiplier = this._lastScrollDuration ? 1 / (this._lastScrollDuration * 0.001): 0;
     this.setVelocity(this._lastScrollDelta.x * multiplier, this._lastScrollDelta.y * multiplier);
+
+    if (this._isDragging) {
+      this.emit(ScrollContainer.DRAG_STOP, event);
+      this._isDragging = false;
+    }
   }
 
   onTick (scale) {
@@ -186,7 +227,7 @@ class ScrollContainer extends Container {
   set scrollLeft (value) {
     const maxScroll = this.content.width - this.width;
     value = value < 0 ? 0 : (value > maxScroll ? maxScroll : value);
-    this.content.x = -(value + this.content.left);
+    this.content.position.x = -(value + this.content.left);
   }
 
   get scrollTop () {
@@ -196,7 +237,7 @@ class ScrollContainer extends Container {
   set scrollTop (value) {
     const maxScroll = this.content.height - this.height;
     value = value < 0 ? 0 : (value > maxScroll ? maxScroll : value);
-    this.content.y = -(value + this.content.top);
+    this.content.position.y = -(value + this.content.top);
   }
 
   get scrollHeight () {
@@ -257,10 +298,19 @@ export default class ScrollContainerElement extends ContainerElement {
     super(props, root);
     this.displayObject.interactionManager = root.application.renderer.plugins.interaction;
     this.scrollHandler = null;
+    this.dragStartHandler = null;
+    this.dragHandler = null;
+    this.dragStopHandler = null;
     this.displayObject.on('scrolled', this.onScroll, this);
+    this.displayObject.on(ScrollContainer.DRAG_START, this.onDragStart, this);
+    this.displayObject.on(ScrollContainer.DRAG, this.onDrag, this);
+    this.displayObject.on(ScrollContainer.DRAG_STOP, this.onDragStop, this);
   }
 
   destroy () {
+    this.displayObject.removeListener(ScrollContainer.DRAG_START, this.onDragStart, this);
+    this.displayObject.removeListener(ScrollContainer.DRAG, this.onDrag, this);
+    this.displayObject.removeListener(ScrollContainer.DRAG_STOP, this.onDragStop, this);
     this.displayObject.removeListener('scrolled', this.onScroll, this);
     super.destroy();
   }
@@ -273,7 +323,12 @@ export default class ScrollContainerElement extends ContainerElement {
 
   applyProps (oldProps, newProps) {
     super.applyProps(oldProps, newProps);
-    this.scrollHandler = newProps.onScroll;
+    const { isScrollWheelEnabled = true, onScroll, onDragStart, onDrag, onDragStop } = newProps;
+    this.scrollHandler = onScroll;
+    this.dragStartHandler = onDragStart;
+    this.dragHandler = onDrag;
+    this.dragStopHandler = onDragStop;
+    this.displayObject.isScrollWheelEnabled = isScrollWheelEnabled;
   }
 
   createDisplayObject () {
@@ -292,6 +347,18 @@ export default class ScrollContainerElement extends ContainerElement {
 
   onScroll () {
     this.scrollHandler && this.scrollHandler({ currentTarget: this.displayObject });
+  }
+
+  onDragStart (event) {
+    this.dragStartHandler && this.dragStartHandler(event);
+  }
+
+  onDrag (event) {
+    this.dragHandler && this.dragHandler(event);
+  }
+
+  onDragStop (event) {
+    this.dragStopHandler && this.dragStopHandler(event);
   }
 
   get isClippingEnabled () {
