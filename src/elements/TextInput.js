@@ -1,6 +1,7 @@
 import BaseElement from './BaseElement';
-import PixiTextInput from 'pixi-text-input';
 import * as Yoga from 'typeflex';
+import * as PIXI from 'pixi.js';
+import 'pixi-text-input';
 
 const { MEASURE_MODE_EXACTLY } = Yoga;
 
@@ -42,7 +43,7 @@ export default class TextInput extends BaseElement {
   }
 
   createDisplayObject () {
-    return new PixiTextInput({ input: {}, box: {} });
+    return new PIXI.TextInput({ input: {}, box: {} });
   }
 
   applyProps (oldProps, newProps) {

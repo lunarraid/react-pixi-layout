@@ -7,7 +7,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import pkg from './package.json';
 
 export default {
-  external: [ 'typeflex' ],
+  external: [ 'typeflex', 'pixi-text-input' ],
   input: 'src/index.js',
   output: [{
     file: pkg.main,

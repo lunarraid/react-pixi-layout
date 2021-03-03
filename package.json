@@ -15,6 +15,7 @@
     "deploy": "gh-pages -d example/build"
   },
   "dependencies": {
+    "pixi-text-input": "^1.0.6",
     "typeflex": "0.0.1"
   },
   "peerDependencies": {
@@ -31,7 +32,6 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "gh-pages": "^2.1.1",
-    "pixi-text-input": "^1.0.5",
     "react-reconciler": "^0.26.1",
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^3.0.3",
