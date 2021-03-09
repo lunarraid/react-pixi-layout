@@ -34,6 +34,7 @@ function appendChild (parentInstance, child) {
 
 function removeChild (parentInstance, child) {
   parentInstance.removeChild(child);
+  child.destroy();
 }
 
 function insertBefore (parentInstance, child, beforeChild) {
@@ -42,13 +43,14 @@ function insertBefore (parentInstance, child, beforeChild) {
   }
 
   const childExists = parentInstance.hasChild(child);
-  const index = parentInstance.getChildIndex(beforeChild);
 
   if (childExists) {
-    parentInstance.setChildIndex(child, index);
-  } else {
-    parentInstance.addChildAt(child, index);
+    parentInstance.removeChild(child);
   }
+
+  const index = parentInstance.getChildIndex(beforeChild);
+
+  parentInstance.addChildAt(child, index);
 }
 
 function commitUpdate (instance, updatePayload, type, oldProps, newProps, internalInstanceHandle) {

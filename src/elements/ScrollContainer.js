@@ -163,8 +163,8 @@ class ScrollContainer extends Container {
   onPointerMove (event) {
     const now = Date.now();
     const newPosition = this.toLocal(event.data.global, null, SCRATCH_POINT);
-    const dx = this._lastPointerPosition.x - newPosition.x;
-    const dy = this._lastPointerPosition.y - newPosition.y;
+    const dx = this._isScrollXEnabled ? this._lastPointerPosition.x - newPosition.x : 0;
+    const dy = this._isScrollYEnabled ? this._lastPointerPosition.y - newPosition.y : 0;
     this._lastPointerPosition.copyFrom(newPosition);
     this._lastScrollDelta.set(dx, dy);
     this._lastScrollDuration = now - this._lastScrollTime;
@@ -219,6 +219,30 @@ class ScrollContainer extends Container {
 
     this.scrollBy(vx * dampingMultiplier, vy * dampingMultiplier);
     this.setVelocity(vx * powDamping, vy * powDamping);
+  }
+
+  get isScrollXEnabled () {
+    return this._isScrollXEnabled;
+  }
+
+  set isScrollXEnabled (value) {
+    if (!value) {
+      this._velocity.x = 0;
+    }
+
+    this._isScrollXEnabled = value;
+  }
+
+  get isScrollYEnabled () {
+    return this._isScrollYEnabled;
+  }
+
+  set isScrollYEnabled (value) {
+    if (!value) {
+      this._velocity.y = 0;
+    }
+
+    this._isScrollYEnabled = value;
   }
 
   get scrollLeft () {
@@ -325,13 +349,26 @@ export default class ScrollContainerElement extends ContainerElement {
 
   applyProps (oldProps, newProps) {
     super.applyProps(oldProps, newProps);
-    const { isScrollWheelEnabled = true, onScroll, onDragStart, onDrag, onDragStop, interactiveChildren = true } = newProps;
+
+    const {
+      isScrollXEnabled = true,
+      isScrollYEnabled = true,
+      isScrollWheelEnabled = true,
+      onScroll,
+      onDragStart,
+      onDrag,
+      onDragStop,
+      interactiveChildren = true
+    } = newProps;
+
     this.interactiveChildren = interactiveChildren;
     this.scrollHandler = onScroll;
     this.dragStartHandler = onDragStart;
     this.dragHandler = onDrag;
     this.dragStopHandler = onDragStop;
     this.displayObject.isScrollWheelEnabled = isScrollWheelEnabled;
+    this.displayObject.isScrollXEnabled = isScrollXEnabled;
+    this.displayObject.isScrollYEnabled = isScrollYEnabled;
   }
 
   createDisplayObject () {

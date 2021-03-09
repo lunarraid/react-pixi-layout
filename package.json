@@ -15,7 +15,6 @@
     "deploy": "gh-pages -d example/build"
   },
   "dependencies": {
-    "pixi-text-input": "^1.0.6",
     "typeflex": "0.0.1"
   },
   "peerDependencies": {

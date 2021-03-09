@@ -102,8 +102,8 @@ export default class Container extends BaseElement {
   removeAllChildrenRecursive () {
     for (let i = this.children.length - 1; i >= 0; i--) {
       const child = this.children[i];
-      child.removeAllChildren();
       this.removeChild(child);
+      child.destroy();
     }
   }
 
@@ -115,8 +115,6 @@ export default class Container extends BaseElement {
 
     this.children.splice(childIndex, 1);
     this.updateMeasureFunction(this.children.length > 0);
-
-    child.destroy();
 
     this.layoutDirty = true;
   }
@@ -155,13 +153,10 @@ export default class Container extends BaseElement {
   }
 
   destroy () {
-    for (let i = this.children.length - 1; i >= 0; i--) {
-      this.removeChild(this.children[i]);
-    }
+    this.removeAllChildrenRecursive();
 
     if (this.clippingSprite) {
       this.displayObject.removeChild(this.clippingSprite);
-
       this.clippingSprite = null;
     }
 
