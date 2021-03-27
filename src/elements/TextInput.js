@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import BaseElement from './BaseElement';
 import * as Yoga from 'typeflex';
 
@@ -262,7 +263,7 @@ class PixiTextInput extends PIXI.Container{
       this._domInput = document.createElement('input');
       this._domInput.type = 'text';
     }
-    
+
     for (let key in this._inputStyle) {
       this._domInput.style[key] = this._inputStyle[key];
     }
@@ -502,7 +503,7 @@ class PixiTextInput extends PIXI.Container{
       case 'center':
         this._surrogate.x = inputBounds.width * 0.5 - this._surrogate.width * 0.5;
         break;
-        
+
       case 'right':
         this._surrogate.x = inputBounds.width - padding[1] - this._surrogate.width;
         break;
