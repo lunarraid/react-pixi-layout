@@ -31,7 +31,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "gh-pages": "^2.1.1",
-    "react-reconciler": "^0.26.1",
+    "react-reconciler": "^0.26.2",
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^10.1.0",
