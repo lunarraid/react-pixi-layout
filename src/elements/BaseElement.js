@@ -31,6 +31,10 @@ yogaConfig.setPointScaleFactor(0);
 
 export default class BaseElement {
 
+  onDragStart = () => {
+    this.isClickValid = false;
+  };
+
   constructor (props, root) {
     this._layoutDirty = true;
     this.root = root;
@@ -52,10 +56,16 @@ export default class BaseElement {
     this.scaleY = 1;
     this.skewX = 0;
     this.skewY = 0;
+
     this.displayObject = this.createDisplayObject(props);
+    this.displayObject.on('pointertap', this.onClick, this);
 
     this._isMeasureFunctionSet = false;
     this.updateMeasureFunction(false);
+
+    this.isClickValid = false;
+    this._clickHandler = null;
+
   }
 
   removeAllChildrenRecursive () {
@@ -98,26 +108,29 @@ export default class BaseElement {
 
       isAutoInteractive = isAutoInteractive || !!newValue;
 
-      if (oldValue !== newValue) {
-        if (oldValue) {
-          this.displayObject.removeListener(key, oldValue);
-        }
-        if (newValue) {
-          this.displayObject.on(key, newValue);
-        }
+      if (propName === 'onClick') {
+        this.clickHandler = newValue;
+      } else if (oldValue !== newValue) {
+        oldValue && this.displayObject.removeListener(key, oldValue);
+        newValue && this.displayObject.on(key, newValue);
       }
     }
+
+    // Cancel clicks for drag events
 
     isInteractive = isInteractive === undefined ? isAutoInteractive : isInteractive;
 
     this.displayObject.interactive = isInteractive;
-    this.displayObject.hitArea = isInteractive ? this.bounds : null;
+    // this.displayObject.hitArea = this.bounds;
   }
 
   applyProps (oldProps, newProps) {
     this.applyInteractiveListeners(oldProps, newProps);
 
-    const { interactiveChildren = true } = newProps;
+    const { interactiveChildren = true, mask = null } = newProps;
+    const { mask: oldMask = null } = oldProps;
+
+
     this.displayObject.interactiveChildren = interactiveChildren;
 
     this.onLayoutCallback = newProps.onLayout || null;
@@ -140,7 +153,9 @@ export default class BaseElement {
       }
     }
 
-    this.displayObject.mask = newProps.mask;
+    if (oldMask !== mask) {
+      this.displayObject.mask = newMask;
+    }
 
     const anchorX = this.parsePercentage(this.style.anchorX, 0.5);
     const anchorY = this.parsePercentage(this.style.anchorY, 0.5);
@@ -196,7 +211,7 @@ export default class BaseElement {
       this.onLayout(cached.x, cached.y, cached.width, cached.height);
 
       if (boundsDirty && this.onLayoutCallback) {
-        this.onLayoutCallback(cached.x, cached.y, cached.width, cached.height);
+        this.root.addToCallbackPool(this);
       }
 
       this.layoutDirty = false;
@@ -246,6 +261,11 @@ export default class BaseElement {
   }
 
   destroy () {
+    if (this.onLayoutCallback) {
+      this.root.removeFromCallbackPool(this);
+    }
+
+    this.clickHandler = null;
     this.displayObject.destroy();
     this.displayObject = null;
     this.layoutNode.free();
@@ -254,6 +274,34 @@ export default class BaseElement {
 
   createDisplayObject () {
     throw new Error('Cannot instantiate base class');
+  }
+
+  onDown (event) {
+    this.isClickValid = true;
+  }
+
+  onClick (event) {
+    this.isClickValid && this.clickHandler && this.clickHandler(event);
+  }
+
+  get clickHandler () {
+    return this._clickHandler;
+  }
+
+  set clickHandler (value) {
+    if (this._clickHandler === value) {
+      return;
+    }
+
+    this._clickHandler = value;
+
+    if (value) {
+      this.displayObject.on('pointerdown', this.onDown, this);
+      window.addEventListener('dragStart', this.onDragStart, false);
+    } else {
+      this.displayObject.removeListener('pointerdown', this.onDown, this);
+      window.removeEventListener('dragStart', this.onDragStart, false);
+    }
   }
 
   get layoutDirty () {

@@ -800,6 +800,16 @@ export default class BitmapTextContainer extends PIXI.Container {
     this.invalidate();
   }
 
+  get leading () {
+    return this._leading;
+  }
+
+  set leading (value) {
+    if (value === this._leading) { return; }
+    this._leading = value;
+    this.invalidate();
+  }
+
   get size () {
     return this._size;
   }
@@ -807,6 +817,7 @@ export default class BitmapTextContainer extends PIXI.Container {
   set size (value) {
     if (value === this._size) { return; }
     this._size = value;
+    this._textDirty = true;
     this.invalidate();
   }
 

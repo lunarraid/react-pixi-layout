@@ -1,6 +1,8 @@
 import * as PIXI from 'pixi.js';
 import BaseElement from './BaseElement';
 
+const tempPoint = new PIXI.Point();
+
 class CustomContainer extends PIXI.Container {
 
   _width = 0;
@@ -14,6 +16,18 @@ class CustomContainer extends PIXI.Container {
     b.maxX = this._width;
     b.minY = 0;
     b.maxY = this._height;
+  }
+
+  containsPoint (point) {
+    this.worldTransform.applyInverse(point, tempPoint);
+
+    const width = this._width;
+    const height = this._height;
+
+    return tempPoint.x >= 0
+      && tempPoint.x < width
+      && tempPoint.y >= 0
+      && tempPoint.y < height;
   }
 
   get height () {
@@ -89,7 +103,9 @@ export default class Container extends BaseElement {
     if (index === this.children.length) {
       this.children.push(child);
 
-      this.getChildContainer().swapChildren(this.clippingSprite, child.displayObject);
+      if (this.clippingSprite) {
+        this.getChildContainer().swapChildren(this.clippingSprite, child.displayObject);
+      }
     } else {
       this.children.splice(index, 0, child);
     }

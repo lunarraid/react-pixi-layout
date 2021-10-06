@@ -30,13 +30,13 @@ export const defaultValues = {
   flexDirection: Yoga.FLEX_DIRECTION_ROW,
   flexWrap: Yoga.WRAP_NO_WRAP,
   justifyContent: Yoga.JUSTIFY_FLEX_START,
-  margin: 0,
-  marginBottom: 0,
-  marginHorizontal: 0,
-  marginLeft: 0,
-  marginRight: 0,
-  marginTop: 0,
-  marginVertical: 0,
+  margin: NaN,
+  marginBottom: NaN,
+  marginHorizontal: NaN,
+  marginLeft: NaN,
+  marginRight: NaN,
+  marginTop: NaN,
+  marginVertical: NaN,
   overflow: Yoga.OVERFLOW_VISIBLE,
   display: Yoga.DISPLAY_FLEX,
   flex: 0,
@@ -50,20 +50,20 @@ export const defaultValues = {
   minHeight: NaN,
   maxWidth: NaN,
   maxHeight: NaN,
-  borderWidth: 0,
-  borderWidthBottom: 0,
-  borderWidthHorizontal: 0,
-  borderWidthLeft: 0,
-  borderWidthRight: 0,
-  borderWidthTop: 0,
-  borderWidthVertical: 0,
-  padding: 0,
-  paddingBottom: 0,
-  paddingHorizontal: 0,
-  paddingLeft: 0,
-  paddingRight: 0,
-  paddingTop: 0,
-  paddingVertical: 0,
+  borderWidth: NaN,
+  borderWidthBottom: NaN,
+  borderWidthHorizontal: NaN,
+  borderWidthLeft: NaN,
+  borderWidthRight: NaN,
+  borderWidthTop: NaN,
+  borderWidthVertical: NaN,
+  padding: NaN,
+  paddingBottom: NaN,
+  paddingHorizontal: NaN,
+  paddingLeft: NaN,
+  paddingRight: NaN,
+  paddingTop: NaN,
+  paddingVertical: NaN,
   position: Yoga.POSITION_TYPE_RELATIVE
 };
 
@@ -397,13 +397,13 @@ const setterMap = {
 };
 
 function isShallowEqual (props1, props2) {
-  for (let key in props1) {
+  for (const key in props1) {
     if (setterMap[key] && (!props2.hasOwnProperty(key) || props1[key] !== props2[key])) {
       return false;
     }
   }
 
-  for (let key in props2) {
+  for (const key in props2) {
     if (setterMap[key] && (!props1.hasOwnProperty(key) || props1[key] !== props2[key])) {
       return false;
     }
@@ -412,20 +412,25 @@ function isShallowEqual (props1, props2) {
   return true;
 }
 
-export default function applyLayoutProperties (node, oldProps, newProps) {
+export default function applyLayoutProperties (node, oldProps, newProps, defaults) {
   if (isShallowEqual(oldProps, newProps)) {
     return false;
   }
 
-  for (let propName in oldProps) {
+  for (const propName in oldProps) {
     const propSetter = setterMap[propName];
 
     if (propSetter && !newProps.hasOwnProperty(propName)) {
-      propSetter(node, defaultValues[propName]);
+
+      const value = defaults && defaults.hasOwnProperty(propName)
+        ? defaults[propName]
+        : defaultValues[propName];
+
+      propSetter(node, value);
     }
   }
 
-  for (let propName in newProps) {
+  for (const propName in newProps) {
     const propSetter = setterMap[propName];
 
     if (propSetter) {
@@ -437,7 +442,7 @@ export default function applyLayoutProperties (node, oldProps, newProps) {
 }
 
 export function applyDefaultLayoutProperties (node) {
-  for (let propName in defaultValues) {
+  for (const propName in defaultValues) {
     const propSetter = setterMap[propName];
 
     if (propSetter) {

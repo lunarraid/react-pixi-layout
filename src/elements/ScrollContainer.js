@@ -1,7 +1,7 @@
 import { Container, Rectangle, Point, Sprite, Texture, Ticker } from 'pixi.js';
 import ContainerElement from './Container';
 
-const { abs, log, pow } = Math;
+const { abs, log, max, pow } = Math;
 
 const VELOCITY_MIN = 0.1;
 const DAMPING = 0.01;
@@ -130,7 +130,7 @@ class ScrollContainer extends Container {
     }
   }
 
-  setVelocity (vx, vy) {
+  setVelocity (vx = 0, vy = 0) {
     if (vx < VELOCITY_MIN && vx > -VELOCITY_MIN) {
       vx = 0;
     }
@@ -176,8 +176,8 @@ class ScrollContainer extends Container {
       return;
     }
 
-    const didDrag = abs(this._initialPointerPosition.x - newPosition.x) > this.dragThreshold
-      || abs(this._initialPointerPosition.y - newPosition.y) > this.dragThreshold;
+    const didDrag = (this._isScrollXEnabled && abs(this._initialPointerPosition.x - newPosition.x) > this.dragThreshold)
+      || (this.isScrollYEnabled && abs(this._initialPointerPosition.y - newPosition.y) > this.dragThreshold);
 
     if (didDrag) {
       this._isDragging = true;
@@ -210,8 +210,8 @@ class ScrollContainer extends Container {
     this._isDragging = false;
   }
 
-  onTick (scale) {
-    const dt = ticker.deltaMS * scale * 0.001;
+  onTick () {
+    const dt = ticker.deltaMS * 0.001;
     const powDamping = pow(DAMPING, dt);
     const dampingMultiplier = (powDamping - 1) / LOG_DAMPING;
 
@@ -260,7 +260,7 @@ class ScrollContainer extends Container {
   }
 
   set scrollTop (value) {
-    const maxScroll = this.content.height - this.height;
+    const maxScroll = max(0, this.content.height - this.height);
     value = value < 0 ? 0 : (value > maxScroll ? maxScroll : value);
     this.content.position.y = -(value + this.content.top);
   }
@@ -351,6 +351,7 @@ export default class ScrollContainerElement extends ContainerElement {
     super.applyProps(oldProps, newProps);
 
     const {
+      dragThreshold = 10,
       isScrollXEnabled = true,
       isScrollYEnabled = true,
       isScrollWheelEnabled = true,
@@ -369,6 +370,7 @@ export default class ScrollContainerElement extends ContainerElement {
     this.displayObject.isScrollWheelEnabled = isScrollWheelEnabled;
     this.displayObject.isScrollXEnabled = isScrollXEnabled;
     this.displayObject.isScrollYEnabled = isScrollYEnabled;
+    this.displayObject.dragThreshold = dragThreshold;
   }
 
   createDisplayObject () {
