@@ -29,6 +29,12 @@ const _registeredElements = {};
 const PixiContext = React.createContext();
 
 function appendChild (parentInstance, child) {
+  const childExists = parentInstance.hasChild(child);
+
+  if (childExists) {
+    parentInstance.removeChild(child);
+  }
+
   parentInstance.addChild(child);
 }
 
