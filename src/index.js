@@ -18,6 +18,7 @@ import SpriteElement from './elements/Sprite';
 import TextElement from './elements/Text';
 import TextInputElement from './elements/TextInput';
 import TilingSpriteElement from './elements/TilingSprite';
+import RootContainer from './elements/RootContainer';
 
 import Stage from './Stage';
 import mergeStyles from './mergeStyles';
@@ -93,6 +94,10 @@ const ReactPixiLayout = ReactFiberReconciler({
   },
 
   finalizeInitialChildren: function (pixiElement, type, props, rootContainerInstance) {
+    if (pixiElement === rootContainerInstance.publicInstance) {
+      rootContainerInstance.updateLayout();
+    }
+
     return false;
   },
 
@@ -120,8 +125,8 @@ const ReactPixiLayout = ReactFiberReconciler({
     return UPDATE_SIGNAL;
   },
 
-  resetAfterCommit: function () {
-    // Noop
+  resetAfterCommit: function (container) {
+    container.updateLayout();
   },
 
   resetTextContent: function (pixiElement) {
@@ -164,6 +169,28 @@ export function registerElement (name, element) {
   _registeredElements[name] = element;
   return name;
 }
+
+export async function render (element, target, callback) {
+  const container = target.__rootReactContainer || new RootContainer();
+  const node = target.__rootReactNode || ReactPixiLayout.createContainer(container);
+
+  ReactPixiLayout.injectIntoDevTools({
+    findFiberByHostInstance: ReactPixiLayout.findFiberByHostInstance,
+    bundleType: 1,
+    version: '16.8.6',
+    rendererPackageName: 'react-pixi-layout'
+  });
+
+  target.__rootReactNode = node;
+  target.__rootReactContainer = container;
+
+  if (container.displayObject.parent !== target) {
+    target.addChild(container.displayObject);
+  }
+
+  ReactPixiLayout.updateContainer(element, node, null, callback);
+}
+
 
 export const Container = 'Container';
 export const Text = 'Text';

@@ -24,12 +24,12 @@ export const defaultValues = {
   right: NaN,
   top: NaN,
   bottom: NaN,
-  alignContent: Yoga.ALIGN_FLEX_START,
-  alignItems: Yoga.ALIGN_STRETCH,
-  alignSelf: Yoga.ALIGN_AUTO,
-  flexDirection: Yoga.FLEX_DIRECTION_ROW,
-  flexWrap: Yoga.WRAP_NO_WRAP,
-  justifyContent: Yoga.JUSTIFY_FLEX_START,
+  alignContent: 'flex-start',
+  alignItems: 'stretch',
+  alignSelf: 'auto',
+  flexDirection: 'row',
+  flexWrap: 'no-wrap',
+  justifyContent: 'flex-start',
   margin: NaN,
   marginBottom: NaN,
   marginHorizontal: NaN,
@@ -37,8 +37,8 @@ export const defaultValues = {
   marginRight: NaN,
   marginTop: NaN,
   marginVertical: NaN,
-  overflow: Yoga.OVERFLOW_VISIBLE,
-  display: Yoga.DISPLAY_FLEX,
+  overflow: 'visible',
+  display: 'flex',
   flex: 0,
   flexBasis: 'auto',
   flexGrow: 0,
@@ -64,7 +64,7 @@ export const defaultValues = {
   paddingRight: NaN,
   paddingTop: NaN,
   paddingVertical: NaN,
-  position: Yoga.POSITION_TYPE_RELATIVE
+  position: 'relative'
 };
 
 export const alignEnumMapping = {
@@ -228,7 +228,6 @@ const setterMap = {
   display: function (node, value) {
     node.setDisplay(displayEnumMapping[value]);
   },
-
 
   flex: function (node, value) {
     node.setFlex(value);
