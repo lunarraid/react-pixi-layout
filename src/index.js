@@ -126,7 +126,7 @@ const ReactPixiLayout = ReactFiberReconciler({
   },
 
   resetAfterCommit: function (container) {
-    container.updateLayout();
+    // Noop
   },
 
   resetTextContent: function (pixiElement) {

@@ -154,7 +154,7 @@ export default class BaseElement {
     }
 
     if (oldMask !== mask) {
-      this.displayObject.mask = newMask;
+      this.displayObject.mask = mask;
     }
 
     const anchorX = this.parsePercentage(this.style.anchorX, 0.5);
