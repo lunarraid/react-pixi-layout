@@ -1,10 +1,10 @@
-import * as PIXI from 'pixi.js';
+import { NineSlicePlane as PixiNineSlicePlane, Texture } from 'pixi.js';
 import Container from './Container';
 
 // Temporary (imperfect) solution to spritesheet texture bug, remove when
 // this is dealt with: https://github.com/pixijs/pixi.js/issues/6451
 
-class NineSlicePlane extends PIXI.NineSlicePlane {
+class NineSlicePlane extends PixiNineSlicePlane {
 
   updateHorizontalVertices () {
     const vertices = this.vertices;
@@ -101,7 +101,7 @@ export default class NineSliceSprite extends Container {
   _textureRef = null;
 
   createDisplayObject () {
-    return new NineSlicePlane(PIXI.Texture.EMPTY);
+    return new NineSlicePlane(Texture.EMPTY);
   }
 
   applyProps (oldProps, newProps) {
@@ -117,10 +117,10 @@ export default class NineSliceSprite extends Container {
 
       if (textureRef) {
         texture = (typeof textureRef === 'string' || textureRef instanceof String)
-          ? PIXI.Texture.from(textureRef)
+          ? Texture.from(textureRef)
           : textureRef;
       } else {
-        texture = PIXI.Texture.NONE;
+        texture = Texture.NONE;
       }
 
       this.displayObject.texture = texture;

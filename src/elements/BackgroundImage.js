@@ -1,5 +1,5 @@
-import * as PIXI from 'pixi.js';
-import Sprite from './Sprite';
+import { Rectangle, Sprite, Texture } from 'pixi.js';
+import RplSprite from './Sprite';
 
 const RESIZE_MODE_STRETCH = 'stretch';
 const RESIZE_MODE_COVER = 'cover';
@@ -8,7 +8,7 @@ const RESIZE_MODE_COVER = 'cover';
  * Supports 'stretch', 'cover', 'contain'
  **/
 
-export default class BackgroundImage extends Sprite {
+export default class BackgroundImage extends RplSprite {
 
   originalTexture = null;
   customTexture = null;
@@ -33,7 +33,7 @@ export default class BackgroundImage extends Sprite {
 
       this.originalTexture = texture;
       this.customTexture = texture
-        ? new PIXI.Texture(texture.baseTexture, new PIXI.Rectangle(), texture.orig.clone(), new PIXI.Rectangle(), texture.rotate)
+        ? new Texture(texture.baseTexture, new Rectangle(), texture.orig.clone(), new Rectangle(), texture.rotate)
         : null;
     }
 

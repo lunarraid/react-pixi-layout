@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Text as PixiText, TextMetrics, TextStyle } from 'pixi.js';
 import BaseElement from './BaseElement';
 
 const textStyleKeys = {
@@ -33,15 +33,15 @@ const textStyleKeys = {
   leading: true
 };
 
-const scratchStyle = new PIXI.TextStyle();
+const scratchStyle = new TextStyle();
 
 export default class Text extends BaseElement {
 
   sizeData = { width: 0, height: 0 };
-  textStyle = new PIXI.TextStyle();
+  textStyle = new TextStyle();
 
   createDisplayObject () {
-    return new PIXI.Text();
+    return new PixiText();
   }
 
   applyProps (oldProps, newProps) {
@@ -81,7 +81,7 @@ export default class Text extends BaseElement {
     const { text, style } = this.displayObject;
     const previousWordWrapWidth = style.wordWrapWidth;
     style.wordWrapWidth = width;
-    const metrics = PIXI.TextMetrics.measureText(text, style);
+    const metrics = TextMetrics.measureText(text, style);
     style.wordWrapWidth = previousWordWrapWidth;
 
     this.sizeData.width = metrics.width;

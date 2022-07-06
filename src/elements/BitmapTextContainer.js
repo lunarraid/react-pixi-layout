@@ -8,7 +8,7 @@
  * ------------------------------------------------------------------------------
  */
 
-import * as PIXI from 'pixi.js';
+import { BitmapFont, Container, Point, Sprite } from 'pixi.js';
 
 const CHARACTER_ID_SPACE = 32;
 const CHARACTER_ID_TAB = 9;
@@ -42,7 +42,7 @@ const Align = {
 
 const { abs, round } = Math;
 
-export default class BitmapTextContainer extends PIXI.Container {
+export default class BitmapTextContainer extends Container {
 
   constructor () {
     super();
@@ -77,10 +77,10 @@ export default class BitmapTextContainer extends PIXI.Container {
     this._height = 0;
   }
 
-  measureText (result = new PIXI.Point(), width = this._width) {
+  measureText (result = new Point(), width = this._width) {
 
     if (!this._fontData) {
-      this._fontData = PIXI.BitmapFont.available[this._font];
+      this._fontData = BitmapFont.available[this._font];
     }
 
     if (!this._fontData || !this._text) {
@@ -216,7 +216,7 @@ export default class BitmapTextContainer extends PIXI.Container {
   }
 
   validate () {
-    this._fontData = PIXI.BitmapFont.available[this._font];
+    this._fontData = BitmapFont.available[this._font];
 
     if (!this._fontData) {
       return;
@@ -577,7 +577,7 @@ export default class BitmapTextContainer extends PIXI.Container {
       charView = characterViewPool[characterViewPoolIndex];
       characterViewPoolIndex--;
     } else {
-      charView = new PIXI.Sprite();
+      charView = new Sprite();
     }
 
     charView.texture = charData.texture;

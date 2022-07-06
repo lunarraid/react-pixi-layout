@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Container as PixiContainer, NineSlicePlane, Rectangle, Point, Sprite, Texture } from 'pixi.js';
 
 import TinyColor from '../util/TinyColor';
 
@@ -26,15 +26,15 @@ export default class BackgroundContainer extends Container {
   constructor (props, root) {
     super(props, root);
 
-    const { texture = PIXI.Texture.WHITE } = props;
+    const { texture = Texture.WHITE } = props;
 
     if (typeof texture === 'string' || texture instanceof String) {
-      this.originalTexture = PIXI.Texture.from(texture);
+      this.originalTexture = Texture.from(texture);
     } else {
       this.originalTexture = texture;
     }
 
-    this.childContainer = new PIXI.Container();
+    this.childContainer = new PixiContainer();
 
     this.displayObject.addChild(this.childContainer);
   }
@@ -78,8 +78,8 @@ export default class BackgroundContainer extends Container {
 
       if (!this.background) {
         this.background = value === BackgroundContainerResizeModes.NINE_SLICE
-          ? new PIXI.NineSlicePlane(PIXI.Texture.WHITE)
-          : new PIXI.Sprite(PIXI.Texture.WHITE);
+          ? new NineSlicePlane(Texture.WHITE)
+          : new Sprite(Texture.WHITE);
       }
 
       this.displayObject.addChildAt(this.background, 0);
@@ -107,9 +107,9 @@ export default class BackgroundContainer extends Container {
     let needsUpdate = true;
 
     if (!texture) {
-      this.originalTexture = PIXI.Texture.WHITE;
+      this.originalTexture = Texture.WHITE;
     } else if (typeof texture === 'string' || texture instanceof String) {
-      this.originalTexture = PIXI.Texture.from(texture);
+      this.originalTexture = Texture.from(texture);
     } else {
       this.originalTexture = texture;
     }
@@ -180,7 +180,7 @@ export default class BackgroundContainer extends Container {
     if (!layoutWidth || !layoutHeight) {
       // Don't draw, it's zero size (and this fixes 9-slicing)
 
-      this.background.texture = PIXI.Texture.EMPTY;
+      this.background.texture = Texture.EMPTY;
 
       return;
     }
@@ -197,22 +197,22 @@ export default class BackgroundContainer extends Container {
 
     const { frame: requestedFrame } = requestedTexture;
 
-    const modifiedTexture = new PIXI.Texture(
+    const modifiedTexture = new Texture(
       requestedTexture.baseTexture,
       requestedTexture.frame.clone(),
       requestedTexture.orig.clone(),
       requestedTexture.trim
         ? requestedTexture.trim.clone()
-        : new PIXI.Rectangle(0, 0, requestedFrame.width, requestedFrame.height),
+        : new Rectangle(0, 0, requestedFrame.width, requestedFrame.height),
       requestedTexture.rotate,
       requestedTexture.anchor
         ? requestedTexture.anchor.clone()
-        : new PIXI.Point(0, 0)
+        : new Point(0, 0)
     );
 
     if (this.resizeMode === BackgroundContainerResizeModes.NINE_SLICE) {
       this.background.texture = modifiedTexture;
-      this.background.scale = new PIXI.Point(this.textureScale, this.textureScale);
+      this.background.scale = new Point(this.textureScale, this.textureScale);
       this.background.width = layoutWidth / this.textureScale;
       this.background.height = layoutHeight / this.textureScale;
 

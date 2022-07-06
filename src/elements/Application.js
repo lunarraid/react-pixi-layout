@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Application as PixiApplication } from 'pixi.js';
 import RootContainer from './RootContainer';
 import mergeStyles from '../mergeStyles';
 
@@ -39,7 +39,7 @@ export default class Application extends RootContainer {
     }, {});
 
     this.view = props.view;
-    this.application = new PIXI.Application(options);
+    this.application = new PixiApplication(options);
     this.application.ticker.add(this.onTick, this);
     return this.application.stage;
   }

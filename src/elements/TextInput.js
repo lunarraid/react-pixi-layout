@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Container, Graphics, Text, TextStyle, TextMetrics } from 'pixi.js';
 import BaseElement from './BaseElement';
 import * as Yoga from 'typeflex';
 
@@ -26,7 +26,7 @@ const { MEASURE_MODE_EXACTLY } = Yoga;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-class PixiTextInput extends PIXI.Container{
+class PixiTextInput extends Container{
 
   constructor (styles) {
     super();
@@ -465,17 +465,17 @@ class PixiTextInput extends PIXI.Container{
   // INPUT SUBSTITUTION
 
   _createSurrogate () {
-    this._surrogateHitbox = new PIXI.Graphics();
+    this._surrogateHitbox = new Graphics();
     this._surrogateHitbox.alpha = 0;
     this._surrogateHitbox.interactive = true;
     this._surrogateHitbox.cursor = 'text';
     this._surrogateHitbox.on('pointerdown', this._onSurrogateFocus, this);
     this.addChild(this._surrogateHitbox);
 
-    this._surrogateMask = new PIXI.Graphics();
+    this._surrogateMask = new Graphics();
     this.addChild(this._surrogateMask);
 
-    this._surrogate = new PIXI.Text('', {});
+    this._surrogate = new Text('', {});
     this.addChild(this._surrogate);
 
     this._surrogate.mask = this._surrogateMask;
@@ -556,7 +556,7 @@ class PixiTextInput extends PIXI.Container{
   }
 
   _deriveSurrogateStyle () {
-    const style = new PIXI.TextStyle();
+    const style = new TextStyle();
 
     for (const key in this._inputStyle) {
       switch (key) {
@@ -644,7 +644,7 @@ class PixiTextInput extends PIXI.Container{
     const style = this._deriveSurrogateStyle();
     const font = style.toFontString();
 
-    this._fontMetrics = PIXI.TextMetrics.measureFont(font);
+    this._fontMetrics = TextMetrics.measureFont(font);
   }
 
 
@@ -763,7 +763,7 @@ function DefaultBoxGenerator (styles) {
 
   return function (w, h, state) {
     const style = styles[state.toLowerCase()];
-    const box = new PIXI.Graphics();
+    const box = new Graphics();
 
     if (style.fill) {
       box.beginFill(style.fill);

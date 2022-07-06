@@ -1,13 +1,13 @@
-import * as PIXI from 'pixi.js';
+import { Matrix, Point, settings, Sprite as PixiSprite, Texture } from 'pixi.js';
 import * as Yoga from 'typeflex';
 import Container from './Container';
 
-const SCRATCH_MATRIX = new PIXI.Matrix();
-const SCRATCH_POINT = new PIXI.Point();
+const SCRATCH_MATRIX = new Matrix();
+const SCRATCH_POINT = new Point();
 
 const { round } = Math;
 
-class SpriteContainer extends PIXI.Sprite {
+class SpriteContainer extends PixiSprite {
 
   calculateVertices () {
     const texture = this._texture;
@@ -73,7 +73,7 @@ class SpriteContainer extends PIXI.Sprite {
 
     if (this._roundPixels)
     {
-        const resolution = PIXI.settings.RESOLUTION;
+        const resolution = settings.RESOLUTION;
 
         for (let i = 0; i < vertexData.length; ++i)
         {
@@ -205,7 +205,7 @@ export default class Sprite extends Container {
   _textureRef = null;
 
   createDisplayObject () {
-    return new SpriteContainer(PIXI.Texture.WHITE);
+    return new SpriteContainer(Texture.WHITE);
   }
 
   applyProps (oldProps, newProps) {
@@ -220,10 +220,10 @@ export default class Sprite extends Container {
 
       if (textureRef) {
         texture = (typeof textureRef === 'string' || textureRef instanceof String)
-          ? PIXI.Texture.from(textureRef)
+          ? Texture.from(textureRef)
           : textureRef;
       } else {
-        texture = PIXI.Texture.WHITE;
+        texture = Texture.WHITE;
       }
 
       this.updateTexture(texture);

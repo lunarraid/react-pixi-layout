@@ -1,9 +1,7 @@
-import * as PIXI from 'pixi.js';
 import Container from './Container';
 import mergeStyles from '../mergeStyles';
 
 const MAX_LAYOUT_ATTEMPTS = 3;
-
 
 export default class RootContainer extends Container {
 

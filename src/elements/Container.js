@@ -1,9 +1,9 @@
-import * as PIXI from 'pixi.js';
+import { Container as PixiContainer, Point, Sprite, Texture } from 'pixi.js';
 import BaseElement from './BaseElement';
 
-const tempPoint = new PIXI.Point();
+const tempPoint = new Point();
 
-class CustomContainer extends PIXI.Container {
+class CustomContainer extends PixiContainer {
 
   _width = 0;
   _height = 0;
@@ -67,7 +67,7 @@ export default class Container extends BaseElement {
     }
 
     if (isClippingEnabled) {
-      this.clippingSprite = new PIXI.Sprite(PIXI.Texture.WHITE);
+      this.clippingSprite = new Sprite(Texture.WHITE);
 
       this.clippingSprite.width = this.bounds.width;
       this.clippingSprite.height = this.bounds.height;

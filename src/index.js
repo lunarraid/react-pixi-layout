@@ -188,7 +188,13 @@ export async function render (element, target, callback) {
     target.addChild(container.displayObject);
   }
 
-  ReactPixiLayout.updateContainer(element, node, null, callback);
+  await new Promise((resolve) => {
+    ReactPixiLayout.updateContainer(element, node, null, resolve);
+  });
+
+  container.updateLayout()
+
+  callback();
 }
 
 

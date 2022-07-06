@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { BLEND_MODES, Rectangle } from 'pixi.js';
 import * as Yoga from 'typeflex';
 
 // import applyLayoutProperties, { applyDefaultLayoutProperties } from 'react-pixi-layout/applyLayoutProperties';
@@ -40,7 +40,7 @@ export default class BaseElement {
     this.root = root;
     this.layoutNode = Yoga.Node.create(yogaConfig);
     this.onLayoutCallback = null;
-    this.bounds = new PIXI.Rectangle();
+    this.bounds = new Rectangle();
     this.cachedLayout = {
       left: 0,
       top: 0,
@@ -339,7 +339,7 @@ export default class BaseElement {
 
   static listDefaultStyleProps () {
     return {
-      blendMode: PIXI.BLEND_MODES.NORMAL,
+      blendMode: BLEND_MODES.NORMAL,
       buttonMode: false,
       cacheAsBitmap: false,
       cursor: 'auto',

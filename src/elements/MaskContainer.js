@@ -1,13 +1,13 @@
-import * as PIXI from 'pixi.js';
+import { RenderTexture, Sprite, Ticker } from 'pixi.js';
 
 import Container from './Container';
 
 const NO_CHILDREN = [];
 
-class RenderTextureContainer extends PIXI.Sprite {
+class RenderTextureContainer extends Sprite {
 
   constructor () {
-    super(PIXI.RenderTexture.create(256, 256));
+    super(RenderTexture.create(256, 256));
     this.isRenderingToTexture = false;
   }
 
@@ -48,7 +48,7 @@ export default class MaskContainer extends Container {
 
   constructor (props, root) {
     super(props, root);
-    PIXI.Ticker.shared.add(this.onTick, this);
+    Ticker.shared.add(this.onTick, this);
   }
 
   createDisplayObject () {
@@ -56,7 +56,7 @@ export default class MaskContainer extends Container {
   }
 
   destroy () {
-    PIXI.Ticker.shared.remove(this.onTick, this);
+    Ticker.shared.remove(this.onTick, this);
     super.destroy();
   }
 

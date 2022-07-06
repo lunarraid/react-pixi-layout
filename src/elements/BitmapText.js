@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Point } from 'pixi.js';
 import BitmapTextContainer, { Align } from './BitmapTextContainer';
 import BaseElement from './BaseElement';
 import TinyColor from '../util/TinyColor';
@@ -17,7 +17,7 @@ const textStyleValues = {
 const textStyleKeys = Object.keys(textStyleValues);
 const textStyleKeyCount = textStyleKeys.length;
 
-const scratchPoint = new PIXI.Point();
+const scratchPoint = new Point();
 
 // TODO: We need to handle font existence or not when initializing
 
