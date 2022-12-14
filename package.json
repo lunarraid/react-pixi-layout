@@ -1,6 +1,6 @@
 {
   "name": "react-pixi-layout",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "React Fiber renderer for pixi.js with flexbox layout",
   "author": "lunarraid",
   "license": "MIT",
@@ -20,8 +20,8 @@
   },
   "peerDependencies": {
     "pixi.js": "^6.0.0",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0"
+    "react": ">=0.17.0 <= 18",
+    "react-dom": ">=0.17.0 <= 18"
   },
   "devDependencies": {
     "@lunarraid/animated": "^0.2.3",
