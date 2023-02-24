@@ -16,6 +16,8 @@ export default class Stage extends React.Component {
     this._applicationElement = new Application(props);
     this._applicationContainer = ReactPixiLayout.createContainer(this._applicationElement);
 
+    this._applicationElement.application.renderer.on('resize', this.onResize, this);
+
     this.setState({
       context: {
         application: this._applicationElement.application,
@@ -26,7 +28,7 @@ export default class Stage extends React.Component {
     ReactPixiLayout.injectIntoDevTools({
       findFiberByHostInstance: ReactPixiLayout.findFiberByHostInstance,
       bundleType: 1,
-      version: '16.8.6',
+      version: '18.2.0',
       rendererPackageName: 'react-pixi-layout'
     });
 
@@ -41,6 +43,8 @@ export default class Stage extends React.Component {
 
   componentWillUnmount () {
     ReactPixiLayout.updateContainer(null, this._applicationContainer, this);
+
+    this._applicationElement.application.renderer.removeListener('resize', this.onResize, this);
 
     this._applicationElement.destroy();
     this._applicationElement = null;
@@ -61,6 +65,10 @@ export default class Stage extends React.Component {
 
   render () {
     return <canvas ref={ ref => this._canvas = ref } />;
+  }
+
+  onResize (width, height) {
+    this.props.onResize && this.props.onResize(width, height);
   }
 
 }

@@ -26,7 +26,7 @@ const { MEASURE_MODE_EXACTLY } = Yoga;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-class PixiTextInput extends Container{
+class PixiTextInput extends Container {
 
   constructor (styles) {
     super();

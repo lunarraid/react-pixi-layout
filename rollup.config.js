@@ -1,31 +1,30 @@
-import babel from 'rollup-plugin-babel';
-import nodebuiltins from 'rollup-plugin-node-builtins';
-import commonjs from 'rollup-plugin-commonjs';
-import external from 'rollup-plugin-peer-deps-external';
-import resolve from 'rollup-plugin-node-resolve';
-
-import pkg from './package.json';
+import babel from '@rollup/plugin-babel';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
+import commonjs from '@rollup/plugin-commonjs';
 
 export default {
-  external: [ 'typeflex' ],
+  external: [ 'typeflex', 'react-reconciler', 'pixi.js', 'react', 'react-dom' ],
   input: 'src/index.js',
   output: [
     {
-      file: pkg.main,
+      file: 'dist/cjs/index.js',
       format: 'cjs',
       sourcemap: true
     },
     {
-      file: pkg.module,
+      file: 'dist/esm/index.js',
       format: 'esm',
       sourcemap: true
     }
   ],
   plugins: [
-    external(),
-    nodebuiltins(),
-    babel({ exclude: 'node_modules/**' }),
-    resolve(),
-    commonjs()
+    babel({
+      babelHelpers: 'bundled',
+      exclude: 'node_modules/**'
+    }),
+    commonjs(),
+    nodeResolve({ preferBuiltins: false }),
+    terser()
   ]
 };
