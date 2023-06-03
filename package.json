@@ -19,20 +19,20 @@
     "typeflex": "0.0.1"
   },
   "peerDependencies": {
-    "pixi.js": "^6.0.0",
-    "react": ">=0.17.0 <= 18",
-    "react-dom": ">=0.17.0 <= 18"
+    "pixi.js": "^6.5.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@lunarraid/animated": "^0.2.3",
     "babel-core": "^6.26.0",
-    "babel-eslint": "^10.0.3",
+    "babel-eslint": "^10.1.0",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "gh-pages": "^2.1.1",
-    "react-reconciler": "^0.26.2",
+    "react-reconciler": "^0.29.0",
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^10.1.0",
